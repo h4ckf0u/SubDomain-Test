@@ -16,7 +16,7 @@
 				</w2:dataMap>
 				<w2:dataMap id="dm_userInfo">
 					<w2:keyInfo>
-						<w2:key id="userID" name="아이디" dataType="text">&xxe;</w2:key>
+						<w2:key id="userID" name="아이디" dataType="text">test</w2:key>
 						<w2:key id="userName" name="이름" dataType="text"></w2:key>
 						<w2:key id="address" name="주소" dataType="text"></w2:key>
 					</w2:keyInfo>
