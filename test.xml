@@ -138,7 +138,7 @@
 	</head>
 	<body>
 		<xf:group id="group3" style="position:relative;width:800px;padding:10px;">
-			<w2:textbox id="textbox3" style="left:10px;top:10px;" label="test222 - Spring Framework 연동 (Bean 객체 변환 - Annotation)" tagname="h1"></w2:textbox>
+			<w2:textbox id="textbox3" style="left:10px;top:10px;" label="test333 - Spring Framework 연동 (Bean 객체 변환 - Annotation)" tagname="h1"></w2:textbox>
 			<w2:textbox id="textbox5" style="left:10px;top:60px;padding-bottom:15px;"
 				label="1. JSON 형태를 Bean(VO) 객체로 변환&lt;br/&gt;2. Spring Framework의 Controller, View 공통 모듈에 RequestAdapter, ResponseAdapter를 적용.&lt;br/&gt;3. Bean 객체의 Type 지정은 서버에서 Map, Annotation을 이용하여 지정한다. (Annotation은 서버 JDK1.5이상부터 지원)">
 			</w2:textbox>
