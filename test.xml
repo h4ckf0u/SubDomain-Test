@@ -1,7 +1,8 @@
 
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE test[
-<!ENTITY testtest "XXE SUCCESS">
+<!DOCTYPE foo[
+<!ELEMENT foo ANY>
+<!ENTITY xxe "test">
 ]>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
 	<head>
@@ -13,7 +14,7 @@
 			<w2:dataCollection>
 				<w2:dataMap id="dm_result">
 					<w2:keyInfo>
-						<w2:key id="result" name="결과" dataType="text">&testtest;</w2:key>
+						<w2:key id="result" name="결과" dataType="text">&xxe;<w2:key>
 					</w2:keyInfo>
 				</w2:dataMap>
 				<w2:dataMap id="dm_userInfo">
@@ -138,7 +139,7 @@
 	</head>
 	<body>
 		<xf:group id="group3" style="position:relative;width:800px;padding:10px;">
-			<w2:textbox id="textbox3" style="left:10px;top:10px;" label="Sample -&testtest; 연동 (Bean 객체 변환 - Annotation)" tagname="h1"></w2:textbox>
+			<w2:textbox id="textbox3" style="left:10px;top:10px;" label="Sample -&xxe; 연동 (Bean 객체 변환 - Annotation)" tagname="h1"></w2:textbox>
 			<w2:textbox id="textbox5" style="left:10px;top:60px;padding-bottom:15px;"
 				label="1. JSON 형태를 Bean(VO) 객체로 변환&lt;br/&gt;2. Spring Framework의 Controller, View 공통 모듈에 RequestAdapter, ResponseAdapter를 적용.&lt;br/&gt;3. Bean 객체의 Type 지정은 서버에서 Map, Annotation을 이용하여 지정한다. (Annotation은 서버 JDK1.5이상부터 지원)">
 			</w2:textbox>
