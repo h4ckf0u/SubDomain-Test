@@ -23,7 +23,7 @@
 				</w2:dataMap>
 				<w2:dataMap id="dm_resUserInfo">
 					<w2:keyInfo>
-						<w2:key id="userID" name="아이디" dataType="text">&xxe;</w2:key>
+						<w2:key id="userID" name="아이디" dataType="text"></w2:key>
 						<w2:key id="userName" name="이름" dataType="text"></w2:key>
 						<w2:key id="address" name="주소" dataType="text"></w2:key>
 					</w2:keyInfo>
@@ -39,13 +39,13 @@
 				</w2:dataList>
 				<w2:dataList id="dl_codeList">
 					<w2:columnInfo>
-						<w2:column id="code" name="코드" dataType="text"></w2:column>
-						<w2:column id="value" name="값" dataType="text"></w2:column>
+						<w2:column id="code" name="코드" dataType="text">&xxe;</w2:column>
+						<w2:column id="value" name="값" dataType="text">&xxe;</w2:column>
 					</w2:columnInfo>
 				</w2:dataList>
 				<w2:dataMap id="dm_result">
 					<w2:keyInfo>
-						<w2:key id="result" name="건수" dataType="text"></w2:key>
+						<w2:key id="result" name="건수" dataType="text">&xxe;</w2:key>
 					</w2:keyInfo>
 				</w2:dataMap>
 			</w2:dataCollection>
