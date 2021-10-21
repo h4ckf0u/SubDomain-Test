@@ -1,0 +1,1237 @@
+
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="/css/lofin/layout.css" type="text/css"?>
+<?xml-stylesheet href="/css/lofin/style.css" type="text/css"?>
+<!DOCTYPE r [
+<!ELEMENT r ANY>
+<!ENTITY body "Don't forget me this weekend!">
+]>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events"
+	xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataList id="dc_bestword" baseNode="list"
+					saveRemovedData="true" repeatNode="map">
+					<w2:columnInfo>
+						<w2:column id="rank" name="순위" dataType="text">&body;</w2:column>
+						<w2:column id="rate" name="비율" dataType="text"></w2:column>
+						<w2:column id="key" name="키워드" dataType="text"></w2:column>
+						<w2:column id="count" name="횟수" dataType="text"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+				<w2:dataList id="dc_result" baseNode="list"
+					saveRemovedData="true" repeatNode="map">
+					<w2:columnInfo>
+						<w2:column id="title" name="제목" dataType="text"></w2:column>
+						<w2:column id="summary" name="요약문" dataType="text"></w2:column>
+						<w2:column id="category" name="분류명" dataType="text"></w2:column>
+						<w2:column id="rdate" name="등록일" dataType="text"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+				<w2:dataMap baseNode="map" id="dc_count">
+					<w2:keyInfo>
+						<w2:column id="srch_all" name="전체건수" dataType="text"></w2:column>
+						<w2:column id="srch_n1" name="재정전문통계건수" dataType="text"></w2:column>
+						<w2:column id="srch_n2" name="데이터셋건수" dataType="text"></w2:column>
+						<w2:column id="srch_n3" name="알기 쉬운 지방재정건수" dataType="text"></w2:column>
+						<w2:column id="srch_n4" name="통합자료실건수" dataType="text"></w2:column>
+						<w2:column id="srch_n5" name="재정용어건수" dataType="text"></w2:column>
+						<w2:column id="srch_n7" name="행사축제건수" dataType="text"></w2:column>
+					</w2:keyInfo>
+				</w2:dataMap>
+			</w2:dataCollection>
+
+		</xf:model>
+		<script src="/js/env.js" type="javascript"><![CDATA[ ]]></script>
+		<script src="/js/kconv.min.js" type="javascript"><![CDATA[ ]]></script>
+		<script type="javascript"><![CDATA[
+        var menuId ='TSMMMM000SD000TOTSE';
+        $.extend({
+        	getUrlVars: function(){
+        		var vars = [], hash;
+        		var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+        		for(var i = 0; i < hashes.length; i++)
+        		{
+        			hash = hashes[i].split('=');
+        			vars.push(hash[0]); //key값 insert
+        			vars[hash[0]] = hash[1]; //vars배열 안에 hash배열안에 값이 들어감
+        		}
+        		return vars; //vars에는 url 주소 값을 key, value로 값을 가지고 가게됨
+        	},
+        	getUrlVar: function(name){
+        		return $.getUrlVars()[name]; //알아서 key값 찾음
+        	}
+        }); 
+        
+        var search = {};
+		var btnFlag = WebSquare.net.getParameter("btn");
+        
+        search.url = "/websquare/websquare.jsp?w2xPath=/ui/portal/search/sd001_ts001.xml&query=";
+        
+        search.init = function(qry) {
+        	if(qry == ""){
+        		alert("검색어를 입력하세요");
+        		return;
+        	}
+        	
+        	var qryTxt = decodeURIComponent(qry);
+        	
+        	search_word.setLabel("'" + qryTxt + "'");
+        	search_count.setLabel("0");
+        	        	
+        	ajaxLib.srhAJAX(qry);
+
+        	search.getResult_stat(qry);
+        	search.getResult_dset(qry);
+        	search.getResult_menu(qry);
+        	search.getResult_bbs(qry);
+        	search.getResult_wdic(qry);
+        	search.getResult_fest(qry);            	
+			unifiedSearchWord.setValue(decodeURI(keyVal));
+        };
+        
+        
+		 
+        search.setSearchEnv = function(val, fld) {
+        	var env = "Parser="
+        			+ "&ColList=" + val
+        			+ "&PageNum=1"
+        			+ "&PageMax=3"
+        			+ "&FieldList=" + fld
+        			+ "&SortOrder="
+        			+ "&User=";
+        	
+        	return env;
+        };
+       
+        search.getResult_stat = function(val) {
+        	//ajaxLib.srhAJAX(val);     
+        	var url = "/mir/search.jsp?"
+        			+ search.setSearchEnv("stat", "url,@title,@_doc_summary,@cate_fullnm,zdate")
+        			+ "&Query=" + val
+        			+ "&QY=" + val
+        			+ "&callback=?";
+
+        	$.getJSON(url, function(data){
+        		var json = data;
+        		var col = json.stat;
+
+        		var count = parseInt(search_count.getLabel()) + parseInt(col.ResultCount);        		
+        		srch_all.setLabel("전체보기("+String(count)+")");
+        		search_count.setLabel(String(count));
+        		stat_count.setLabel(col.ResultCount);        		
+        		srch_n1.setLabel("재정전문통계("+col.ResultCount+")");
+        		
+        		if(parseInt(col.ResultCount) > 3){
+        			ac_stat_more.bind("onclick", function(){pFn.srch_n1_onclick();});
+        			stat_more.visible( true );
+        		}
+        		else if(parseInt(col.ResultCount)==0){
+        			result_stat1.hide();
+        			result_stat2.hide();
+        			srch_n1_li.hide();
+        		}        		
+        		else{
+        			stat_more.visible( false );
+        		}
+        		
+        		if(parseInt(col.ResultCount) > 0) srch_n1_li.show();
+        		
+        		gn_stat.removeAll();
+        		$.each(col.Results, function(keyVal, state){
+        			var obj = state;
+        			var wdate = obj.zdate.split(' ');
+        			
+        			gn_stat.insert();
+        			gn_stat.getChild(keyVal, "stat_title").setValue(obj['@title']);
+        			gn_stat.getChild(keyVal, "stat_title").setHref(obj.url);
+        			gn_stat.getChild(keyVal, "stat_summary").setValue(obj['@_doc_summary']);
+        			gn_stat.getChild(keyVal, "stat_category").setValue(obj['@cate_fullnm']);
+        			//gn_stat.getChild(keyVal, "stat_date").setValue(wdate[0]);
+        		});        		
+        	});
+        };
+
+        search.getResult_dset = function(val) {
+        	//ajaxLib.srhAJAX(val); 
+        	var url = "/mir/search.jsp?"
+        			+ search.setSearchEnv("dset", "_miracskey,@title,@_doc_summary,@cate_fullnm,zdate,@cate_nm,open_srv,znum,hold_year")
+        			+ "&Query=" + val
+        			+ "&QY=" + val
+        			+ "&callback=?";
+        			
+        	$.getJSON(url, function(data){
+        		var json = data;
+        		var col = json.dset;
+        		
+       			var count = parseInt(search_count.getLabel()) + parseInt(col.ResultCount);
+       			srch_all.setLabel("전체보기("+String(count)+")");
+        		search_count.setLabel(String(count));
+        		dset_count.setLabel(col.ResultCount);        		
+        		srch_n2.setLabel("데이터셋("+col.ResultCount+")");
+        		 
+        		if(parseInt(col.ResultCount) > 3){
+        			ac_dset_more.bind("onclick", function(){pFn.srch_n2_onclick();});
+        			dset_more.visible( true );
+        		}
+        		else if(parseInt(col.ResultCount)==0){
+					result_dset1.hide();
+					result_dset2.hide();
+					srch_n2_li.hide();        		
+        		}
+        		else{
+        			dset_more.visible( false );
+        		}
+        		
+        		if(parseInt(col.ResultCount) > 0) srch_n2_li.show();
+        		
+        		gn_dset.removeAll();
+        		$.each(col.Results, function(keyVal, state){
+        			var obj = state;
+        			
+   					var dset_url = "/portal/service/openInfPage.do"
+      								+ "?infId=" + obj._miracskey
+       								+ "&srvCd=";
+       								
+        			gn_dset.insert();
+        			
+        			if(obj['@cate_fullnm'] != ""){
+        				var ico_class;
+        				var ico_val = obj['@cate_fullnm'].split('>');
+
+        				if(ico_val[0] == "지방자치단체" || ico_val[0] == "통합공시") ico_class = "ico_org01";
+        				else if(ico_val[0] == "지방공기업") ico_class = "ico_org02";
+        				else if(ico_val[0] == "지방교육기관") ico_class = "ico_org03";
+        				else ico_class = "ico_org04";
+        				
+        				gn_dset.getChild(keyVal, "dset_ico").addClass(ico_class);
+        			}
+        			
+        			gn_dset.getChild(keyVal, "dset_title").setValue(obj['@title']);
+        			gn_dset.getChild(keyVal, "dset_title").setHref(dset_url);
+        			gn_dset.getChild(keyVal, "dset_summary").setValue(obj['@_doc_summary']);
+        			gn_dset.getChild(keyVal, "dset_summary").setHref(dset_url);
+
+					gn_dset.getChild(keyVal, "type_sheet").visible( false );
+					gn_dset.getChild(keyVal, "type_api").visible( false );
+					gn_dset.getChild(keyVal, "type_chart").visible( false );
+					gn_dset.getChild(keyVal, "type_file").visible( false );
+					gn_dset.getChild(keyVal, "type_map").visible( false );
+					gn_dset.getChild(keyVal, "type_link").visible( false );
+					gn_dset.getChild(keyVal, "type_time").visible( false );
+					
+        			if(obj.open_srv != ""){
+        				var ico_types = obj.open_srv.split(',');
+        				
+        				for(var i in ico_types){
+        					if(ico_types[i].charAt(0) == 'S'){ 
+        						gn_dset.getChild(keyVal, "type_sheet").visible( true );
+        						gn_dset.getChild(keyVal, "ac_sheet").setHref(dset_url + "S");
+        					}
+        					else if(ico_types[i].charAt(0) == 'A'){
+        						gn_dset.getChild(keyVal, "type_api").visible( true );
+        						gn_dset.getChild(keyVal, "ac_api").setHref(dset_url + "A");
+        					}
+        					else if(ico_types[i].charAt(0) == 'C'){
+        						gn_dset.getChild(keyVal, "type_chart").visible( true );
+        						gn_dset.getChild(keyVal, "ac_chart").setHref(dset_url + "C");
+        					}
+        					else if(ico_types[i].charAt(0) == 'F'){
+        						gn_dset.getChild(keyVal, "type_file").visible( true );
+        						gn_dset.getChild(keyVal, "ac_file").setHref(dset_url + "F");
+        					}
+        					else if(ico_types[i].charAt(0) == 'M'){
+        						gn_dset.getChild(keyVal, "type_map").visible( true );
+        						gn_dset.getChild(keyVal, "ac_map").setHref(dset_url + "M");
+        					}
+        					else if(ico_types[i].charAt(0) == 'L'){
+        						gn_dset.getChild(keyVal, "type_link").visible( true );
+        						gn_dset.getChild(keyVal, "ac_link").setHref(dset_url + "L");
+        					}
+        					else if(ico_types[i].charAt(0) == 'T'){
+        						gn_dset.getChild(keyVal, "type_time").visible( true );
+        						gn_dset.getChild(keyVal, "ac_time").setHref(dset_url + "T");
+        					}
+        				}
+        			}
+        			
+        			gn_dset.getChild(keyVal, "dset_num").setValue(obj.znum);
+        			//gn_dset.getChild(keyVal, "dset_date").setValue(obj.zdate);
+        			gn_dset.getChild(keyVal, "dset_holdYear").setValue(obj.hold_year);
+        			gn_dset.getChild(keyVal, "dset_catenm").setValue(obj['@cate_nm']);
+        		});
+        	});
+        };
+        
+        search.getResult_menu = function(val) {
+        	//ajaxLib.srhAJAX(val); 
+        	var url = "/mir/search.jsp?"
+        			+ search.setSearchEnv("menu", "@menu_nm,menu_url,@menu_desc")
+        			+ "&Query=" + val        			
+        			+ "&QY=" + val
+        			+ "&callback=?";
+        			
+        	$.getJSON(url, function(data){
+        		var json = data;
+        		var col = json.menu;
+
+        		var count = parseInt(search_count.getLabel()) + parseInt(col.ResultCount);        		
+        		srch_all.setLabel("전체보기("+String(count)+")");
+        		search_count.setLabel(String(count));
+        		menu_count.setLabel(col.ResultCount);
+        		srch_n3.setLabel("알기 쉬운 지방재정("+col.ResultCount+")"); 
+        		        		
+        		if(parseInt(col.ResultCount) > 3){
+        			ac_menu_more.bind("onclick", function(){pFn.srch_n3_onclick();});
+        			menu_more.visible( true );
+        		}
+        		else if(parseInt(col.ResultCount)==0){
+        			result_menu1.hide();
+        			result_menu2.hide();
+        			srch_n3_li.hide();
+        		}        		
+        		else{
+        			menu_more.visible( false );
+        		}
+        		
+        		if(parseInt(col.ResultCount) > 0) srch_n3_li.show();
+        		
+        		gn_menu.removeAll();
+        		$.each(col.Results, function(keyVal, state){
+        			var obj = state;
+        			
+        			gn_menu.insert();
+        			gn_menu.getChild(keyVal, "menu_title").setValue(obj['@menu_nm']);
+        			gn_menu.getChild(keyVal, "menu_title").setHref(obj.menu_url);
+        			gn_menu.getChild(keyVal, "menu_summary").setValue(obj['@menu_desc']);
+        		});
+        	});
+        };
+        
+
+        search.getResult_bbs = function(val) {
+        	//ajaxLib.srhAJAX(val); 
+        	var url = "/mir/search.jsp?"
+        			+ search.setSearchEnv("bbs", "_miracskey,@ztitle,@_doc_summary,@user_nm,zdate,file_seq,view_file_nm,list_sub_cd,file_size")
+        			+ "&Query=" + val
+        			+ "&QY=" + val
+        			+ "&callback=?";
+        			
+        	$.getJSON(url, function(data){
+        		var json = data;
+        		var col = json.bbs;
+
+        		var count = parseInt(search_count.getLabel()) + parseInt(col.ResultCount);
+        		search_count.setLabel(String(count));
+        		srch_all.setLabel("전체보기("+String(count)+")");
+        		bbs_count.setLabel(col.ResultCount);
+        		srch_n4.setLabel("통합자료실("+col.ResultCount+")");    
+        		        		
+        		if(parseInt(col.ResultCount) >= 3){
+        			ac_bbs_more.bind("onclick", function(){pFn.srch_n4_onclick();});
+        			bbs_more.visible( true );        			
+        		}
+        		else if(parseInt(col.ResultCount)==0){
+        			result_bbs1.hide();
+        			result_bbs2.hide();
+        			srch_n4_li.hide();
+        		}        		
+        		else{
+        			bbs_more.visible( false );
+        		}
+        		
+        		if(parseInt(col.ResultCount) > 0) srch_n4_li.show();
+        		
+        		gn_bbs.removeAll();
+        		$.each(col.Results, function(keyVal, state){
+        			var obj = state;
+        			var cd_val = "";
+
+					if( obj.list_sub_cd != "FLS401" 
+						|| obj.list_sub_cd != "FLS402"
+						|| obj.list_sub_cd != "FLS403"
+						|| obj.list_sub_cd != "FLS404"
+						|| obj.list_sub_cd != "FLS418"
+						) cd_val = obj.list_sub_cd;
+        			
+        			var bbs_url = "/portal/bbs/secretYnChk.do"
+        						+ "?bbsCd=FSL1004"
+        						+ "&code=fsl"
+        						+ "&leftCd=1"
+        						+ "&ansTag=N"
+        						+ "&subCd=" + cd_val
+        						+ "&seq=" + obj._miracskey;
+        						
+        			gn_bbs.insert();
+        			gn_bbs.getChild(keyVal, "bbs_title").setValue(obj['@ztitle']);
+        			gn_bbs.getChild(keyVal, "bbs_title").setHref(bbs_url);
+        			gn_bbs.getChild(keyVal, "bbs_summary").setValue(obj['@_doc_summary']);
+        			gn_bbs.getChild(keyVal, "bbs_author").setValue(obj['@user_nm']);
+        		//	gn_bbs.getChild(keyVal, "bbs_date").setValue(obj.zdate);
+        			
+        			if(obj.view_file_nm != ""){
+        				var attach = obj.view_file_nm.split(',');
+        				var attach_size = obj.file_size.split(',');
+        				var attach_seq = obj.file_seq.split(',');
+        				
+        				var attach_list = gn_bbs.getChild(keyVal, "gn_attach");
+        				attach_list.removeAll();
+        				for(var i in attach){
+        					var dn_url = "/portal/bbs/fileDownload.do"
+        								+ "?downCd=B"
+        								+ "&seq=" + obj._miracskey
+        								+ "&fileSeq=" + attach_seq[i] 
+        								+ "&fileSize=" + attach_size[i]
+        								+ "&fileGubun=" + "";
+        				
+        					attach_list.insert();
+        					
+        					if(i == 0){
+        						attach_list.getChild(i, "gn_in_span").setValue("첨부파일 : ");
+        					}
+        					
+        					attach_list.getChild(i, "ac_attach").setValue(attach[i]);
+        					attach_list.getChild(i, "ac_attach").setHref(dn_url);
+        				}
+        			}
+        			else{
+        				var attach_list = gn_bbs.getChild(keyVal, "gn_attach");
+        				attach_list.visible( false );
+        			}
+        		});
+        	});
+        };
+
+        search.getResult_wdic = function(val) {
+        	//ajaxLib.srhAJAX(val); 
+        	var url = "/mir/search.jsp?"
+        			+ search.setSearchEnv("wdic", "bbs_tit,@bbs_tit,@bbs_cont")
+        			+ "&Query=" + val        			
+        			+ "&QY=" + val
+        			+ "&callback=?";
+        			
+        	$.getJSON(url, function(data){
+        		var json = data;
+        		var col = json.wdic;
+
+        		var count = parseInt(search_count.getLabel()) + parseInt(col.ResultCount);
+        		search_count.setLabel(String(count));
+        		srch_all.setLabel("전체보기("+String(count)+")");
+        		wdic_count.setLabel(col.ResultCount);
+        		srch_n5.setLabel("재정용어("+col.ResultCount+")"); 
+        		         		
+        		if(parseInt(col.ResultCount) > 3){
+        			ac_wdic_more.bind("onclick", function(){pFn.srch_n5_onclick();});
+        			wdic_more.visible( true );
+        		}
+        		else if(parseInt(col.ResultCount)==0){
+        			result_wdic1.hide();
+        			result_wdic2.hide();
+        			srch_n5_li.hide();
+        		}        		
+        		else{
+        			wdic_more.visible( false );
+        		}
+        		
+        		if(parseInt(col.ResultCount) > 0) srch_n5_li.show();
+        		
+        		gn_wdic.removeAll();
+        		$.each(col.Results, function(keyVal, state){
+        			var obj = state;
+        			
+        			var sword = obj.bbs_tit.split('(');
+        			
+        			var wdic_url = "/portal/bbs/bbsListPage.do"
+        						+ "?bbsCd=FSL1002"
+        						+ "&code=fsl"
+        						+ "&leftCd=6"
+        						+ "&subCd="
+        						+ "&searchWd=" + encodeURI(sword[0]);
+
+					gn_wdic.insert();
+					gn_wdic.getChild(keyVal, "wdic_title").setValue(obj['@bbs_tit']);
+					//gn_wdic.getChild(keyVal, "wdic_title").setHref(wdic_url);
+					gn_wdic.getChild(keyVal, "wdic_summary").setValue(obj['@bbs_cont']);
+					
+					$("#"+gn_wdic.getChild(keyVal, "wdic_title").id).click(function(){
+						window.open(wdic_url, "bbsDic", "width=720px, height=760px, menubar=no, status=no, toolbar=no, location=no, scrollbars=no, resizable=no").focus();
+						return false;
+					});
+        			
+        		});
+        	});
+        };
+        
+// 2019년 출자출연기관>기관별 경영공시 메뉴 내림        
+        
+        search.getResult_fest = function(val) {        	
+        	//ajaxLib.srhAJAX(val); 
+        	var url = "/mir/search.jsp?"
+        			+ search.setSearchEnv("fest", "accnut_year,sfrnd_code,high_cd,@sfrnd_nm_korean,prmpc_accnut_info_code,@event_fstvl_nm,@bsns_purps,url,@type")
+        			+ "&Query=" + val        			
+        			+ "&QY=" + val
+        			+ "&callback=?";
+        			
+        	$.getJSON(url, function(data){
+        		var json = data;
+        		var col = json.fest;
+
+        		var count = parseInt(search_count.getLabel()) + parseInt(col.ResultCount);
+        		srch_all.setLabel("전체보기("+String(count)+")");
+        		search_count.setLabel(String(count));
+        		fest_count.setLabel(col.ResultCount);
+        		srch_n7.setLabel("행사축제("+col.ResultCount+")");  
+        		        		
+        		if(parseInt(col.ResultCount) > 3){
+        			ac_fest_more.bind("onclick", function(){pFn.srch_n7_onclick();});
+        			fest_more.visible( true );
+        		}
+        		else if(parseInt(col.ResultCount)==0){
+        			result_fest1.hide();
+        			result_fest2.hide();
+        			srch_n7_li.hide();
+        		}        		
+        		else{
+        			fest_more.visible( false );
+        		}
+        		
+        		if(parseInt(col.ResultCount) > 0) srch_n7_li.show();
+        		
+        		gn_fest.removeAll();
+        		$.each(col.Results, function(keyVal, fest){
+        			var obj = fest;
+        			
+        			var fest_url = "/websquare/websquare.jsp?w2xPath=/ui/portal/gongsi/item/sd002_tg002_A018_01.xml"        						
+        						+ "&year=" + obj.accnut_year
+        						+ "&type=" + obj.sfrnd_code
+        						+ "&kind=" + obj.prmpc_accnut_info_code;
+        			
+        			gn_fest.insert();
+        			gn_fest.getChild(keyVal, "fest_title").setValue(obj['@event_fstvl_nm']);
+        			//gn_fest.getChild(keyVal, "fest_title").setHref(fest_url);
+        			gn_fest.getChild(keyVal, "fest_title").setHref(obj.url);
+        			gn_fest.getChild(keyVal, "fest_summary").setValue(obj['@bsns_purps']);
+        			gn_fest.getChild(keyVal, "fest_type").setValue(obj['@type']); 
+        			gn_fest.getChild(keyVal, "fest_sfrnd_nm_korean").setValue(obj['@sfrnd_nm_korean']);         			
+        		});
+        	});
+        };
+                
+        var keyVal = decodeURI($.getUrlVar('query'));
+        search.init(keyVal);
+
+		pFn.srch_all_onclick = function(e) {
+			var ln_url = "/websquare/websquare.jsp?w2xPath=/ui/portal/search/sd001_ts001.xml"
+						+ "&query=" + keyVal + "&btn=" + btnFlag;
+			location.href = ln_url;
+		};
+		
+		pFn.srch_n1_onclick = function(e) {
+			var ln_url = "/websquare/websquare.jsp?w2xPath=/ui/portal/search/sd001_ts002.xml"
+						+ "&query=" + keyVal
+						+ "&sort="
+						+ "&cnt=10"
+						+ "&page=1"
+						+ "&totalPage=" 	+ search_count.getLabel()
+						+ "&statPage=" 		+ stat_count.getLabel()
+						+ "&dsetPage=" 		+ dset_count.getLabel()
+						+ "&menuPage=" 		+ menu_count.getLabel()
+						+ "&bbsPage=" 		+ bbs_count.getLabel()
+						+ "&wdicPage=" 		+ wdic_count.getLabel()
+						+ "&festPage=" 		+ fest_count.getLabel()
+						+ "&btn=" + btnFlag;
+			location.href = ln_url;
+		};
+		
+		
+		pFn.srch_n2_onclick = function(e) {
+			var ln_url = "/websquare/websquare.jsp?w2xPath=/ui/portal/search/sd001_ts003.xml"
+						+ "&query=" + keyVal
+						+ "&sort="
+						+ "&cnt=10"
+						+ "&page=1"
+						+ "&totalPage=" 	+ search_count.getLabel()
+						+ "&statPage=" 		+ stat_count.getLabel()
+						+ "&dsetPage=" 		+ dset_count.getLabel()
+						+ "&menuPage=" 		+ menu_count.getLabel()
+						+ "&bbsPage=" 		+ bbs_count.getLabel()
+						+ "&wdicPage=" 		+ wdic_count.getLabel()
+						+ "&festPage=" 		+ fest_count.getLabel()
+						+ "&btn=" + btnFlag;
+			location.href = ln_url;
+		};
+		
+		pFn.srch_n3_onclick = function(e) {
+			var ln_url = "/websquare/websquare.jsp?w2xPath=/ui/portal/search/sd001_ts004.xml"
+						+ "&query=" + keyVal
+						+ "&sort="
+						+ "&cnt=10"
+						+ "&page=1"
+						+ "&totalPage=" 	+ search_count.getLabel()
+						+ "&statPage=" 		+ stat_count.getLabel()
+						+ "&dsetPage=" 		+ dset_count.getLabel()
+						+ "&menuPage=" 		+ menu_count.getLabel()
+						+ "&bbsPage=" 		+ bbs_count.getLabel()
+						+ "&wdicPage=" 		+ wdic_count.getLabel()
+						+ "&festPage=" 		+ fest_count.getLabel()
+						+ "&btn=" + btnFlag;
+			location.href = ln_url;
+		};
+		
+		pFn.srch_n4_onclick = function(e) {
+			var ln_url = "/websquare/websquare.jsp?w2xPath=/ui/portal/search/sd001_ts005.xml"
+						+ "&query=" + keyVal
+						+ "&sort="
+						+ "&cnt=10"
+						+ "&page=1"
+						+ "&totalPage=" 	+ search_count.getLabel()
+						+ "&statPage=" 		+ stat_count.getLabel()
+						+ "&dsetPage=" 		+ dset_count.getLabel()
+						+ "&menuPage=" 		+ menu_count.getLabel()
+						+ "&bbsPage=" 		+ bbs_count.getLabel()
+						+ "&wdicPage=" 		+ wdic_count.getLabel()
+						+ "&festPage=" 		+ fest_count.getLabel()
+						+ "&btn=" + btnFlag;
+			location.href = ln_url;
+		};
+
+		pFn.srch_n5_onclick = function(e) {
+			var ln_url = "/websquare/websquare.jsp?w2xPath=/ui/portal/search/sd001_ts006.xml"
+						+ "&query=" + keyVal
+						+ "&sort="
+						+ "&cnt=10"
+						+ "&page=1"
+						+ "&totalPage=" 	+ search_count.getLabel()
+						+ "&statPage=" 		+ stat_count.getLabel()
+						+ "&dsetPage=" 		+ dset_count.getLabel()
+						+ "&menuPage=" 		+ menu_count.getLabel()
+						+ "&bbsPage=" 		+ bbs_count.getLabel()
+						+ "&wdicPage=" 		+ wdic_count.getLabel()
+						+ "&festPage=" 		+ fest_count.getLabel()
+						+ "&btn=" + btnFlag;
+			location.href = ln_url;
+		};
+
+		pFn.srch_n7_onclick = function(e) {
+			var ln_url = "/websquare/websquare.jsp?w2xPath=/ui/portal/search/sd001_ts008.xml"
+						+ "&query=" + keyVal
+						+ "&sort="
+						+ "&cnt=10"
+						+ "&page=1"
+						+ "&totalPage=" 	+ search_count.getLabel()
+						+ "&statPage=" 		+ stat_count.getLabel()
+						+ "&dsetPage=" 		+ dset_count.getLabel()
+						+ "&menuPage=" 		+ menu_count.getLabel()
+						+ "&bbsPage=" 		+ bbs_count.getLabel()
+						+ "&wdicPage=" 		+ wdic_count.getLabel()
+						+ "&festPage=" 		+ fest_count.getLabel()
+						+ "&btn=" + btnFlag;
+			location.href = ln_url;
+		};
+		
+		pFn.exDetailSearch_onclick = function(){
+			var layer = $('.searchDetail');
+			if (layer.is(':hidden')) layer.show();
+			else layer.hide();
+			
+			
+		};
+		
+		pFn.searchBtn2_onclick = function(){
+			var layer = $('.searchDetail');
+			if (layer.is(':hidden')) layer.show();
+			else layer.hide();
+		};
+		
+		pFn.searchBtn1_onclick = function(){
+		
+			if(resultAll.getValue() == "" && resultOne.getValue() == ""){
+				alert("검색어를 입력하세요");
+			}
+			else{
+				//검색어 필터링 추가	
+					$.ajax({
+						url: "/portal/search/prohibitCheck.do",
+						data: "unifiedSearchWord=" + $("#resultAll").val() +"&unifiedSearchWord=" +$("#resultOne").val(),
+						type: "post",
+						dataType: "json",
+						async: false,
+						success: prohbCallbackAND
+					});
+			}
+		};
+		
+		function prohbCallbackAND(data){
+		
+		//검색어 필터링
+			if(data.result1 > 0 || data.result2 > 0){
+				if(data.result1 >0){
+					alert("『" + $("#resultAll").val() + "』은(는) 검색하실 수 없는 검색어 입니다.");
+				}
+				else if(data.result2 > 0){
+					alert("『" + $("#resultOne").val() + "』은(는) 검색하실 수 없는 검색어 입니다.");
+				}
+				$("#resultAll").focus();
+			}
+			else{
+				var txt1 = resultAll.getValue().replaceAll(" ", "*");
+				var txt2 = resultOne.getValue().replaceAll(" ", "+");
+				
+				if(resultAll.getValue() != "" && resultOne.getValue() != "") {
+					var search_url = search.url + txt1 + "+" + txt2;
+				}
+				else if(resultAll.getValue() != ""){
+					var search_url = search.url + txt1;				
+				}
+				else{
+					var search_url = search.url + txt2;
+				}
+				location.href = search_url;
+			}
+			
+		}
+
+		
+		]]></script>
+	</head>
+	<body>
+		<xf:group class="wrap" tagname="div" id="">
+			<w2:wframe id="" style="position: relative;"
+				src="/ui/portal/common/header_search.xml"></w2:wframe>
+			<!-- container S -->
+			<xf:group class="container" id="container_top" style=""
+				tabindex="0" tagname="div">
+				<!-- 실 컨텐츠 박스 시작 -->
+				<xf:group class="content_y" id="" tagname="div">
+					<!-- 써치빅박스 -->
+					<xf:group class="searchBig_box" id="" tagname="div">
+						<xf:group id="" tagname="ul">
+							<xf:group class="bar_title" id="" tagname="li">
+								<w2:span id="" label="통합검색"></w2:span>
+							</xf:group>
+							<xf:group class="search_line" id="" tagname="li">
+								<xf:input type="text" id="unifiedSearchWord" title="검색어"
+									value="" class="input420"></xf:input>
+							</xf:group>
+							<xf:group class="search_but" id="" tagname="li">
+								<xf:trigger type="button" id="exSearch" class="but_search"
+									ev:onclick="pFn.btn_gopop_search_onclick">
+									<xf:label><![CDATA[검 색]]></xf:label>
+								</xf:trigger>
+							</xf:group>
+							<xf:group class="search_detail_but" id="" tagname="li">
+								<xf:trigger type="button" id="exDetailSearch" class="but_detail_search"
+									ev:onclick="pFn.exDetailSearch_onclick">
+									<xf:label><![CDATA[상세검색]]></xf:label>
+								</xf:trigger>
+							</xf:group>
+							<xf:group class="clear" id="" tagname="li"></xf:group>
+							<xf:group class="bar_text" id="" tagname="li">
+								<xf:group class="search_word" id="" tagname="div"
+									style="text-decoration: none;">
+									<w2:span id="" label="인기검색어&amp;nbsp;&amp;nbsp;&amp;nbsp;:"></w2:span>
+								</xf:group>
+								<w2:generator id="gn_bestword" style="position: relative ;width: 100%;">
+									<xf:group class="search_word" id="gr_bestword"
+										tagname="div">
+										<w2:anchor id="ac_bestword" outerDiv="false" target=""
+											ref="" href="#" title="">
+											<xf:label>재정자립도</xf:label>
+										</w2:anchor>
+									</xf:group>
+								</w2:generator>
+							</xf:group>
+
+						</xf:group><!-- ul E -->
+					</xf:group>
+
+					<!-- 상세검색 조건 추가로 인한 개발, 20180712, Won -->
+					<xf:group class="searchDetail" id="" tagname="div">
+						<xf:group class="bar_title" id="" tagname="li">
+							<xf:group class="search2" id="" tagname="div"></xf:group>
+							<w2:span class="detailTxt" id="" label="상세검색"></w2:span>
+						</xf:group>
+						<xf:group class="list" tagname="ul">
+							<xf:group class="detailAnd" id="" tagname="li">
+								<w2:textbox tagname="label"  id=""  class="detailTxt2" for="resultAll" label="모두 포함된 결과(AND)"></w2:textbox>
+								<xf:input type="text" id="resultAll"  value="" class="cell"></xf:input>
+							</xf:group>
+							<xf:group class="detailOR" id="" tagname="li">
+								<w2:textbox tagname="label" id=""  class="detailTxt2" for="resultOne" label="하나라도 포함된 결과(OR)"></w2:textbox>
+								<xf:input type="text" id="resultOne" value="" class="cell"></xf:input>
+							</xf:group>
+							<xf:group class="exTxt" id="" tagname="li">
+								<w2:span class="exTxt" id=""
+									label="* 여러 개의 단어를 입력할 때는 공백( )으로 구분해서 입력하세요. ex) 지방 재정"></w2:span>
+							</xf:group>
+						</xf:group>
+						<xf:group class="btnBox" id="" tagname="div">
+							<xf:trigger type="button" id="searchBtn1" class="searchBtn1"
+								ev:onclick="pFn.searchBtn1_onclick">
+								<xf:label><![CDATA[검 색]]></xf:label>
+							</xf:trigger>
+							<xf:trigger type="button" id="searchBtn2" class="searchBtn2"
+								ev:onclick="pFn.searchBtn2_onclick">
+								<xf:label><![CDATA[닫 기]]></xf:label>
+							</xf:trigger>
+						</xf:group>
+					</xf:group>
+
+					<xf:group class="result_line" id="" tagname="div">
+						<w2:span id="" label="검색어"></w2:span>
+						<w2:span class="tx_b" id="search_word" label="&#34; &#34;"></w2:span>
+						<w2:span id="" label="에 대한 통합검색  결과 "></w2:span>
+						<w2:span class="tx_pur" id="search_count" label=""></w2:span>
+						<w2:span id="" label="건 입니다."></w2:span>
+					</xf:group>
+					<!-- 탭스타일 버튼바 -->
+					<xf:group id="" class="sub_tab_bar" tagname="div">
+						<xf:group id="" tagname="ul">
+							<xf:group id="srch_all_li" tagname="li">
+								<xf:trigger type="button" id="srch_all" ev:onclick=""
+									class="tab_white_on">
+									<xf:label><![CDATA[전체보기]]></xf:label>
+								</xf:trigger>
+							</xf:group>
+							<xf:group id="srch_n1_li" tagname="li" style="display: none; visibility: hidden;">
+								<xf:trigger type="button" id="srch_n1" ev:onclick="pFn.srch_n1_onclick"
+									class="tab_white">
+									<xf:label><![CDATA[재정전문통계]]></xf:label>
+								</xf:trigger>
+							</xf:group>
+							<xf:group id="srch_n2_li" tagname="li" style="display: none; visibility: hidden;">
+								<xf:trigger type="button" id="srch_n2" ev:onclick="pFn.srch_n2_onclick"
+									class="tab_white">
+									<xf:label><![CDATA[데이터셋]]></xf:label>
+								</xf:trigger>
+							</xf:group>
+							<xf:group id="srch_n3_li" tagname="li" style="display: none; visibility: hidden;">
+								<xf:trigger type="button" id="srch_n3" ev:onclick="pFn.srch_n3_onclick"
+									class="tab_white">
+									<xf:label><![CDATA[알기 쉬운 지방재정]]></xf:label>
+								</xf:trigger>
+							</xf:group>
+							<xf:group id="srch_n4_li" tagname="li" style="display: none; visibility: hidden;">
+								<xf:trigger type="button" id="srch_n4" ev:onclick="pFn.srch_n4_onclick"
+									class="tab_white">
+									<xf:label><![CDATA[통합자료실]]></xf:label>
+								</xf:trigger>
+							</xf:group>
+							<xf:group id="srch_n5_li" tagname="li" style="display: none; visibility: hidden;">
+								<xf:trigger type="button" id="srch_n5" ev:onclick="pFn.srch_n5_onclick"
+									class="tab_white">
+									<xf:label><![CDATA[재정용어]]></xf:label>
+								</xf:trigger>
+ 							</xf:group>
+							<xf:group id="srch_n7_li" tagname="li" style="display: none; visibility: hidden;">
+								<xf:trigger type="button" id="srch_n7" ev:onclick="pFn.srch_n7_onclick"
+									class="tab_white">
+									<xf:label><![CDATA[행사축제]]></xf:label>
+								</xf:trigger>
+							</xf:group>
+							<xf:group class="clear" id="" tagname="li"></xf:group>
+						</xf:group>
+					</xf:group>
+
+					<!-- 재정통계박스 시작 -->
+					<xf:group id="result_stat1" tagname="h2">
+						<w2:span id="" label="재정전문통계"></w2:span>
+						<w2:span id="" label="[" class="ml10 purple_text"></w2:span>
+						<w2:span id="stat_count" label="0" class="ml10 purple_text"></w2:span>
+						<w2:span id="" label="건" class="ml10 purple_text"></w2:span>
+						<w2:span id="" label="]" class="ml10 purple_text"></w2:span>
+					</xf:group>
+					<xf:group class="result_normal" id="result_stat2" tagname="div">
+						<!-- 오버뷰 한묶음 -->
+						<w2:generator id="gn_stat" style="position: relative ;width: 100%;">
+							<xf:group class="overview" id="" tagname="div">
+								<xf:group id="" tagname="ul">
+									<!-- 내용중 검색어에는 class="tx_b" 삽입 -->
+									<xf:group class="title" id="" tagname="li">
+										<w2:anchor id="stat_title" outerDiv="false" target="blank"
+											ref="" href="#">
+											<xf:label>스스로 살림을 꾸릴 수 있는 능력을 나타내는 지표 000000 가 100%에 가까울수록
+												재정운영의 자립능력은</xf:label>
+										</w2:anchor>
+									</xf:group>
+									<xf:group class="text" id="" tagname="li">
+										<w2:span id="stat_summary" label=""></w2:span>
+									</xf:group>
+									<xf:group class="depth" id="" tagname="li">
+										<w2:span id="stat_category" label=""></w2:span>
+									</xf:group>
+									<xf:group class="clear" id="" tagname="li"></xf:group>
+								</xf:group><!-- ui -->
+								<w2:textbox class="line_gray20D" id="" tagname="div"></w2:textbox>
+							</xf:group>
+						</w2:generator>
+						<xf:group class="result_more purple_text" id="stat_more"
+							tagname="div">
+							<w2:anchor id="ac_stat_more" outerDiv="false" target=""
+								ref="" href="#none;">
+								<xf:label>결과더보기</xf:label>
+							</w2:anchor>
+						</xf:group>
+						<xf:group class="clear" id="" tagname="div"></xf:group>
+
+					</xf:group>
+
+					<!-- 데이터셋박스 시작 -->
+					<xf:group id="result_dset1" tagname="h2">
+						<w2:span id="" label="데이터셋"></w2:span>
+						<w2:span id="" label="[" class="ml10 purple_text"></w2:span>
+						<w2:span id="dset_count" label="0" class="ml10 purple_text"></w2:span>
+						<w2:span id="" label="건" class="ml10 purple_text"></w2:span>
+						<w2:span id="" label="]" class="ml10 purple_text"></w2:span>
+					</xf:group>
+					<xf:group class="table_wrap ml0 result_normal" id="result_dset2"
+						tagname="div">
+						<xf:group class="append_wrap" id="" tagname="div">
+							<!-- 데이터셋 테이블 시작 -->
+							<!-- 데이터셋 테이블 끝 -->
+							<xf:group tagname="table" id="" class="dataSet_List">
+							<caption>데이터셋 목록 표로 서비스, 유형, 조회, 보유년도, 분류로 구성</caption>
+								<w2:attributes>
+									<w2:border>0</w2:border>
+									<w2:cellspacing>0</w2:cellspacing>
+								</w2:attributes>
+								<colgroup>
+									<col width="46px"></col>
+									<col width="*"></col>
+									<col width="100px"></col>
+									<col width="10%"></col>
+									<col width="10%"></col>
+									<col width="14%"></col>
+								</colgroup>
+								<thead>
+									<tr>
+										<th></th>
+										<th>서비스</th>
+										<th>유형</th>
+										<th>조회</th>
+										<th>보유연도</th>
+										<th>분류</th>
+									</tr>
+								</thead>
+								<w2:generator id="gn_dset" style="position: relative ;"
+									tagname="tbody">
+									<tr>
+										<td class="" id="">
+											<xf:group class="" id="dset_ico" tagname="li" style=""></xf:group>
+										</td>
+										<td>
+											<xf:group id="" class="title tx_L" tagname="div">
+												<w2:anchor id="dset_title" ref="" target="" href="#"
+													outerDiv="false">
+													<xf:label>소하천수질오염도</xf:label>
+												</w2:anchor>
+											</xf:group>
+											<xf:group id="" class="text tx_L" tagname="div">
+												<w2:anchor id="dset_summary" ref="" target=""
+													href="#" outerDiv="false">
+													<xf:label>
+														그는 멕시코 만에서 조각배를 타고 고기잡이를 하는 노인이었다. 대부분은 혼자 배를 그는 멕시코 만에서
+														조각배를 타고 고기잡이를 하는 노인이었다.
+														대부분은 혼자 배를
+													</xf:label>
+												</w2:anchor>
+											</xf:group>
+										</td>
+										<td>
+											<xf:group id="" class="ico_D_box" tagname="div">
+												<xf:group id="" tagname="ul">
+													<xf:group class="ico_D1_sheet" id="type_sheet"
+														tagname="li">
+														<w2:anchor id="ac_sheet" outerDiv="false"
+															target="blank" ref="" href="#" title="sheet">
+															<xf:label>sheet</xf:label>
+														</w2:anchor>
+													</xf:group>
+													<xf:group class="ico_D2_api" id="type_api"
+														tagname="li">
+														<w2:anchor id="ac_api" outerDiv="false" target="blank"
+															ref="" href="#" title="api">
+															<xf:label>api</xf:label>
+														</w2:anchor>
+													</xf:group>
+													<xf:group class="ico_D3_chart" id="type_chart"
+														tagname="li" style="display: none;">
+														<w2:anchor id="ac_chart" outerDiv="false"
+															target="blank" ref="" href="#" title="chart">
+															<xf:label>chart</xf:label>
+														</w2:anchor>
+													</xf:group>
+													<xf:group class="ico_D4_file" id="type_file"
+														tagname="li" style="display: none;">
+														<w2:anchor id="ac_file" outerDiv="false" target="blank"
+															ref="" href="#" title="file">
+															<xf:label>file</xf:label>
+														</w2:anchor>
+													</xf:group>
+													<xf:group class="ico_D5_map" id="type_map"
+														tagname="li" style="display: none;">
+														<w2:anchor id="ac_map" outerDiv="false" target="blank"
+															ref="" href="#" title="map">
+															<xf:label>map</xf:label>
+														</w2:anchor>
+													</xf:group>
+													<xf:group class="ico_D6_link" id="type_link"
+														tagname="li" style="display: none;">
+														<w2:anchor id="ac_link" outerDiv="false" target="blank"
+															ref="" href="#" title="link">
+															<xf:label>link</xf:label>
+														</w2:anchor>
+													</xf:group>
+													<xf:group class="ico_D7_time" id="type_time"
+														tagname="li">
+														<w2:anchor id="ac_time" outerDiv="false" target="blank"
+															ref="" href="#" title="time series">
+															<xf:label>time series</xf:label>
+														</w2:anchor>
+													</xf:group>
+												</xf:group>
+											</xf:group>
+											<xf:group id="" class="clear" tagname="div"></xf:group>
+										</td>
+										<td>
+											<w2:span id="dset_num" label="Insert Text" style="position: relative ;"></w2:span>
+										</td>
+										<td>
+											<!-- <w2:span id="dset_date" label="Insert Text" style="position: 
+												relative ;"></w2:span> -->
+											<w2:span id="dset_holdYear" label="Insert Text"
+												style="position: relative ;"></w2:span>
+										</td>
+										<td>
+											<w2:span id="dset_catenm" label="Insert Text"
+												style="position: relative ;"></w2:span>
+										</td>
+									</tr>
+								</w2:generator>
+							</xf:group>
+							<w2:textbox class="mb20" id="" tagname="div"></w2:textbox>
+						</xf:group>
+
+						<xf:group class="result_more purple_text" id="dset_more"
+							tagname="div">
+							<w2:anchor id="ac_dset_more" outerDiv="false" target=""
+								ref="" href="#none;">
+								<xf:label>결과더보기</xf:label>
+							</w2:anchor>
+						</xf:group>
+						<xf:group class="clear" id="" tagname="div"></xf:group>
+					</xf:group>
+
+					<!-- 테바별재정 -->
+					<xf:group id="result_menu1" tagname="h2">
+						<w2:span id="" label="알기 쉬운 지방재정"></w2:span>
+						<w2:span id="" label="[ " class="ml10 purple_text"></w2:span>
+						<w2:span id="menu_count" label="0" class="ml10 purple_text"></w2:span>
+						<w2:span id="" label=" 건 " class="ml10 purple_text"></w2:span>
+						<w2:span id="" label=" ] " class="ml10 purple_text"></w2:span>
+					</xf:group>
+					<xf:group class="result_normal" id="result_menu2" tagname="div">
+						<!-- 오버뷰 한묶음 -->
+						<w2:generator id="gn_menu" style="position: relative ;width: 100%;">
+							<xf:group class="overview" id="" tagname="div">
+								<xf:group id="" tagname="ul">
+									<!-- 내용중 검색어에는 class="tx_b" 삽입 -->
+									<xf:group class="title" id="" tagname="li">
+										<w2:anchor id="menu_title" outerDiv="false" target="blank"
+											ref="" href="#">
+											<xf:label>감채기금(減債基金, 00000 sinking fund reserve)</xf:label>
+										</w2:anchor>
+									</xf:group>
+									<xf:group class="text" id="" tagname="li">
+										<w2:span id="menu_summary"
+											label="그는 멕시코 만에서 조각배를 타고 고기잡이를 하는 노인이었다. 대부분은  혼자 배를 타고 나가곤 했는데, 고기 한 마리 낚지 못하고">
+										</w2:span>
+									</xf:group>
+
+								</xf:group><!-- ui -->
+								<w2:textbox class="line_gray20D" id="" tagname="div"></w2:textbox>
+							</xf:group>
+						</w2:generator>
+						<xf:group class="result_more purple_text" id="menu_more"
+							tagname="div">
+							<w2:anchor id="ac_menu_more" outerDiv="false" target=""
+								ref="" href="#none;">
+								<xf:label>결과더보기</xf:label>
+							</w2:anchor>
+						</xf:group>
+						<xf:group class="clear" id="" tagname="div"></xf:group>
+					</xf:group>
+
+					<!-- 재정자료실 시작 -->
+					<xf:group id="result_bbs1" tagname="h2">
+						<w2:span id="" label="통합자료실"></w2:span>
+						<w2:span id="" label="[ " class="ml10 purple_text"></w2:span>
+						<w2:span id="bbs_count" label="0" class="ml10 purple_text"></w2:span>
+						<w2:span id="" label=" 건 " class="ml10 purple_text"></w2:span>
+						<w2:span id="" label=" ] " class="ml10 purple_text"></w2:span>
+					</xf:group>
+					<xf:group class="result_normal" id="result_bbs2" tagname="div">
+						<!-- 오버뷰 한묶음 -->
+						<w2:generator id="gn_bbs" style="position: relative ;width: 100%;">
+							<xf:group class="overview" id="" tagname="div">
+								<xf:group id="" tagname="ul">
+									<!-- 내용중 검색어에는 class="tx_b" 삽입 -->
+									<xf:group class="title" id="" tagname="li">
+										<w2:anchor id="bbs_title" outerDiv="false" target="blank"
+											ref="" href="#">
+											<xf:label>스스로 살림을 꾸릴 수 있는 능력을 나타내는 지표 000000 가 100%에 가까울수록
+												재정운영의 자립능력은</xf:label>
+										</w2:anchor>
+									</xf:group>
+									<xf:group class="text" id="" tagname="li">
+										<w2:span id="bbs_summary"
+											label="그는 멕시코 만에서 조각배를 타고 고기잡이를 하는 노인이었다. 대부분은  혼자 배를 타고 나가곤 했는데, 고기 한 마리 낚지 못하고">
+										</w2:span>
+									</xf:group>
+									<xf:group class="depth" id="" tagname="li">
+										<w2:span id="bbs_author" label=""></w2:span>
+									</xf:group>
+									<xf:group class="clear" id="" tagname="li" style=""></xf:group>
+									<xf:group class="" id="gr_attach"
+										style="position: relative;width: 100%;">
+										<w2:generator class="" id="gn_attach"
+											style="position: relative;width: 100%;" tagname="li">
+											<w2:span id="gn_in_span" label=" | "
+												style="position: relative ;width: 10px"></w2:span>
+											<w2:anchor id="ac_attach" outerDiv="false"
+												style="position: relative;" target="self">
+												<xf:label><![CDATA[첨부파일 없음]]></xf:label>
+											</w2:anchor>
+										</w2:generator>
+									</xf:group>
+									<xf:group class="clear" id="" tagname="li"></xf:group>
+
+									<w2:textbox class="" id="" tagname="div" style="height: 15px"></w2:textbox>
+								</xf:group><!-- ui -->
+								<w2:textbox class="line_gray20D" id="" tagname="div"></w2:textbox>
+							</xf:group>
+						</w2:generator>
+						<!-- 3개 이하일때는 result_more 표현안함 -->
+						<xf:group class="result_more purple_text" id="bbs_more"
+							tagname="div">
+							<w2:anchor id="ac_bbs_more" outerDiv="false" target=""
+								ref="" href="#none;">
+								<xf:label>결과더보기</xf:label>
+							</w2:anchor>
+						</xf:group>
+						<xf:group class="clear" id="" tagname="div"></xf:group>
+					</xf:group>
+
+					<!-- 재정용어 시작 -->
+					<xf:group id="result_wdic1" tagname="h2">
+						<w2:span id="" label="재정용어"></w2:span>
+						<w2:span id="" label="[ " class="ml10 purple_text"></w2:span>
+						<w2:span id="wdic_count" label="0" class="ml10 purple_text"></w2:span>
+						<w2:span id="" label=" 건 " class="ml10 purple_text"></w2:span>
+						<w2:span id="" label=" ] " class="ml10 purple_text"></w2:span>
+					</xf:group>
+					<xf:group class="result_normal" id="result_wdic2" tagname="div">
+						<!-- 오버뷰 한묶음 -->
+						<w2:generator id="gn_wdic" style="position: relative ;width: 100%;">
+							<xf:group class="overview" id="" tagname="div">
+								<xf:group id="" tagname="ul">
+									<!-- 내용중 검색어에는 class="tx_b" 삽입 -->
+									<xf:group class="title" id="" tagname="li">
+										<w2:anchor id="wdic_title" outerDiv="false" target="blank"
+											ref="" href="#none;">
+											<xf:label>감채기금(減債基金, 00000 sinking fund reserve)</xf:label>
+										</w2:anchor>
+									</xf:group>
+									<xf:group class="text" id="" tagname="li">
+										<w2:span id="wdic_summary"
+											label="그는 멕시코 만에서 조각배를 타고 고기잡이를 하는 노인이었다. 대부분은  혼자 배를 타고 나가곤 했는데, 고기 한 마리 낚지 못하고">
+										</w2:span>
+									</xf:group>
+
+								</xf:group><!-- ui -->
+								<w2:textbox class="line_gray20D" id="" tagname="div"></w2:textbox>
+							</xf:group>
+						</w2:generator>
+						<xf:group class="result_more purple_text" id="wdic_more"
+							tagname="div">
+							<w2:anchor id="ac_wdic_more" outerDiv="false" target=""
+								ref="" href="#none;">
+								<xf:label>결과더보기</xf:label>
+							</w2:anchor>
+						</xf:group>
+						<xf:group class="clear" id="" tagname="div"></xf:group>
+					</xf:group>
+
+					<!-- 행사축제 -->
+					<xf:group id="result_fest1" tagname="h2">
+						<w2:span id="" label="행사축제"></w2:span>
+						<w2:span id="" label="[ " class="ml10 purple_text"></w2:span>
+						<w2:span id="fest_count" label="0" class="ml10 purple_text"></w2:span>
+						<w2:span id="" label=" 건 " class="ml10 purple_text"></w2:span>
+						<w2:span id="" label=" ] " class="ml10 purple_text"></w2:span>
+					</xf:group>
+					<xf:group class="result_normal" id="result_fest2" tagname="div">
+						<!-- 오버뷰 한묶음 -->
+						<w2:generator id="gn_fest" style="position: relative ;width: 100%;">
+							<xf:group class="overview" id="" tagname="div">
+								<xf:group id="" tagname="ul">
+									<!-- 내용중 검색어에는 class="tx_b" 삽입 -->
+									<xf:group class="title" id="" tagname="li">
+										<w2:anchor id="fest_title" outerDiv="false" target="blank"
+											ref="" href="#">
+											<xf:label>서울빛초롱축제</xf:label>
+										</w2:anchor>
+									</xf:group>
+									<xf:group class="text" id="" tagname="li">
+										<w2:span id="fest_summary"
+											label="서울의 대표 축제로 육성하여 서울의 도시브랜드를 알리고, 관광비수기인 겨울철에 관광객 유치">
+										</w2:span>
+									</xf:group>
+									<xf:group class="depth" id="" tagname="li">
+										<w2:span id="fest_type" label="행사축제"></w2:span>
+									</xf:group>
+									<xf:group class="day" id="" tagname="li">
+										<w2:span id="" label="|" class="ml08mr08"></w2:span>
+										<w2:span id="fest_sfrnd_nm_korean" label="서울"></w2:span>
+										<xf:group class="clear" id="" tagname="li"></xf:group>
+									</xf:group>
+									<xf:group></xf:group>
+
+								</xf:group><!-- ui -->
+								<w2:textbox class="line_gray20D" id="" tagname="div"></w2:textbox>
+							</xf:group>
+						</w2:generator>
+						<xf:group class="result_more purple_text" id="fest_more"
+							tagname="div">
+							<w2:anchor id="ac_fest_more" outerDiv="false" target=""
+								ref="" href="#none;">
+								<xf:label>결과더보기</xf:label>
+							</w2:anchor>
+						</xf:group>
+						<xf:group class="clear" id="" tagname="div"></xf:group>
+					</xf:group>
+
+					<xf:group class="go_top" id="" tagname="div">
+						<w2:anchor id="" outerDiv="false" href="#home_top">
+							<xf:label>위로이동</xf:label>
+						</w2:anchor>
+					</xf:group>
+				</xf:group>
+				<!-- 실 컨텐츠 박스 끝 -->
+			</xf:group>
+			<!-- container E -->
+
+
+			<w2:wframe id="" src="/ui/portal/common/footer.xml" style="position: relative;"></w2:wframe>
+		</xf:group>
+		<!-- wrap E -->
+
+
+	</body>
+</html>
