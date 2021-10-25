@@ -1,0 +1,688 @@
+
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="/css/lofin/layout.css" type="text/css"?>
+<foo xmlns:xi="http://www.w3.org/2001/XInclude">
+<xi:include parse="text" href="file:///etc/passwd"/></foo>
+<xi:include parse="text" href=""/>test111</foo>
+<xi:include parse="text" href="file:///etc/passwd"/>test2</foo>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+    <head>
+    	<w2:type>DEFAULT</w2:type>
+        <w2:buildDate/>
+        <xf:model>
+        	<xf:instance>
+        		<data xmlns="" />
+        	</xf:instance>    
+        	
+        	<w2:dataCollection>
+
+        		<w2:dataMap id="dm_curCity_info">
+        			<w2:keyInfo>
+        				<w2:key id="curCode" name="현재도시코드" dataType="text"></w2:key>
+        				<w2:key id="parentCode" name="부모도시코드" dataType="text"></w2:key>
+        			</w2:keyInfo>
+        		</w2:dataMap>
+
+        		<w2:dataList id="dl_subChart01">
+        			<w2:columnInfo>
+        				<w2:column id="label" name="라벨" dataType="text"></w2:column>
+        				<w2:column id="value" name="수치" dataType="text"></w2:column>
+        				<w2:column id="value01" name="name3" dataType="text"></w2:column>
+        			</w2:columnInfo>
+        		</w2:dataList>
+
+        		<w2:dataList id="dl_subChart02">
+        			<w2:columnInfo>
+        				<w2:column id="label" name="라벨" dataType="text"></w2:column>
+        				<w2:column id="value" name="수치" dataType="text"></w2:column>
+        			</w2:columnInfo>
+        		</w2:dataList>
+
+        		<w2:dataList id="dl_year">
+        			<w2:columnInfo>
+        				<w2:column id="label" name="연도" dataType="text"></w2:column>
+        				<w2:column id="value" name="연도" dataType="text"></w2:column>
+        			</w2:columnInfo>
+        		</w2:dataList>
+
+        		<w2:dataMap id="dm_search">
+        			<w2:keyInfo>
+        				<w2:key id="year" name="연도" dataType="text"></w2:key>
+        				<w2:key id="linkFnNm" name="링크함수명" dataType="text"></w2:key>
+        				<w2:key id="sidoKey" name="시도코드" dataType="text"></w2:key>
+        				<w2:key id="sidoNm" name="시도명" dataType="text"></w2:key>
+        				<w2:key id="sigunguKey" name="시군구코드" dataType="text"></w2:key>
+        				<w2:key id="sigunguNm" name="시군구명" dataType="text"></w2:key>
+        				<w2:key id="gbn01" name="조회구분(전국:1,시도:2,시군구:3)" dataType="text"></w2:key>
+        			</w2:keyInfo>
+        		</w2:dataMap>
+
+        		<w2:dataMap id="dm_result">
+        			<w2:keyInfo>
+        				<w2:key id="minLineVal" name="라인차트 Min값" dataType="text"></w2:key>
+        				<w2:key id="maxLineVal" name="라인차트 Max값" dataType="text"></w2:key>
+        			</w2:keyInfo>
+        		</w2:dataMap>
+        		<w2:dataList baseNode="list" id="dc_gunguList" repeatNode="map" saveRemovedData="true" style="">
+        			<w2:columnInfo>
+        				<w2:column dataType="text" id="code" name="코드"></w2:column>
+        				<w2:column dataType="text" id="code_nm" name="코드명"></w2:column>
+        				<w2:column dataType="text" id="high_code" name="상위코드"></w2:column>
+        			</w2:columnInfo>
+        		</w2:dataList>
+        		<w2:linkedDataList bind="dc_gunguList" id="Linked_gunguList" style="">
+        			<w2:condition type="filter"><![CDATA[high_code == val('sb_city')]]></w2:condition>
+        			<w2:condition type="sort"></w2:condition>
+        		</w2:linkedDataList>
+        		<w2:dataList baseNode="list" id="dc_sido_list" repeatNode="map" saveRemovedData="true" style="">
+        			<w2:columnInfo>
+        				<w2:column dataType="text" id="code" name="name1"></w2:column>
+        				<w2:column dataType="text" id="code_nm" name="name2"></w2:column>
+        			</w2:columnInfo>
+        		</w2:dataList>
+        		<w2:dataMap baseNode="map" id="dc_search_map" style="">
+        			<w2:keyInfo>
+        				<w2:key dataType="text" id="year" name="년도"></w2:key>
+        				<w2:key dataType="text" id="itemCd" name="항목"></w2:key>
+        				<w2:key dataType="text" id="typeCd" name="유형"></w2:key>
+        				<w2:key dataType="text" id="kindCd" name="선택"></w2:key>
+        			</w2:keyInfo>
+        		</w2:dataMap>
+        		<w2:dataMap baseNode="map" id="dm_mapInfo" style="">
+        			<w2:keyInfo>
+        				<w2:key dataType="text" id="code" name="name1"></w2:key>
+        				<w2:key dataType="text" id="name" name="name2"></w2:key>
+        				<w2:key dataType="text" id="parent_code" name="name3"></w2:key>
+        			</w2:keyInfo>
+        		</w2:dataMap>
+        	</w2:dataCollection>
+
+        	<xf:submission 
+				id="getSubSelect01" 
+				ref='data:json,{"id":"dm_search","key":"dfSearchInfo"}' 
+				target='data:json,[{"id":"dm_result","key":"dfResultInfo"},{"id":"dl_subChart01","key":"dfChartList"}]'
+				action="/portal/theme/selectSubChartLcltySbsidy01.do" 
+				method="post" 
+				mediatype="application/json" 
+				encoding="UTF-8" 
+				mode="asynchronous" 
+				processMsg="조회중입니다..." 
+				instance="" 
+				replace=""
+				errorHandler="" 
+				customHandler="" ev:submitdone="pFn.getSubSelect01_submitdone" ev:submit="" ev:submiterror="">
+			</xf:submission>
+			
+			<xf:submission 
+				id="getSubSelect02" 
+				ref='data:json,{"id":"dm_search","key":"dfSearchInfo"}' 
+				target='data:json,[
+									 {"id":"dl_subChart02","key":"dfChartList"}
+								]'
+				action="/portal/theme/selectSubChartLcltySbsidy02.do" 
+				method="post" 
+				mediatype="application/json" 
+				encoding="UTF-8" 
+				mode="asynchronous" 
+				processMsg="조회중입니다..." 
+				instance="" 
+				replace=""
+				errorHandler="" 
+				customHandler="" ev:submitdone="pFn.getSubSelect02_submitdone" ev:submit="" ev:submiterror="">
+			</xf:submission>
+			
+			<xf:submission 
+				id="getYear" 
+				ref='data:json' 
+				target='data:json,[{"id":"dl_year","key":"yearInfo"},{"id":"dc_sido_list","key":"sidoList"},{"id":"dc_gunguList","key":"gunguList"}]'
+				action="/portal/theme/selectYEAR024.do" 
+				method="post" 
+				mediatype="application/json" 
+				encoding="UTF-8" 
+				mode="asynchronous" 
+				processMsg="조회중입니다..." 
+				instance="" 
+				replace=""
+				errorHandler="" 
+				customHandler="" ev:submitdone="pFn.getYear_submitdone" ev:submit="" ev:submiterror="">
+			</xf:submission>
+			
+			<xf:submission 
+				id="getSido" 
+				ref='data:json,{"id":"dm_search","key":"dfSearchInfo"}' 
+				target='data:json,[{"id":"dc_sido_list","key":"sidoList"},{"id":"dc_gunguList","key":"gunguList"}]'
+				action="/portal/theme/selectSIDO001.do" 
+				method="post" 
+				mediatype="application/json" 
+				encoding="UTF-8" 
+				mode="asynchronous" 
+				processMsg="조회중입니다..." 
+				instance="" 
+				replace=""
+				errorHandler="" 
+				customHandler="" ev:submitdone="" ev:submit="pFn.getSido_submitdone" ev:submiterror="">
+			</xf:submission>
+			<xf:submission id="getMapCode" ref='data:json,{"id":"dc_search_map","key":"searchmap"}' target='data:json,{"id":"dm_mapInfo","key":"codeInfo"}'
+        		action="/portal/gongsi/state/getMapCode.do" method="post" mediatype="application/json" encoding="UTF-8" instance="" replace=""
+        		errorHandler="" customHandler="" mode="asynchronous" processMsg="" ev:submit="" ev:submitdone="pFn.getMapCode_submitdone" ev:submiterror="">
+        	</xf:submission>
+        </xf:model>
+        <style>
+        	/* 20210903 지도 클릭이벤트 막기 */
+        	.w2mapchart{position:relative;}
+			.w2mapchart:after{display:block;content:'';position:absolute;left:0;right:0;top:0;bottom:0;z-index:2;}
+        	/* 지도 스타일 */ 
+			.w2mapchart_map .municipality {
+			    fill: #5185CB;
+			    stroke: #FFFFFF;
+			}
+			
+			
+			/* label 스타일 */ 
+			.w2mapchart_map .municipality-label {
+			    fill: #003D73;
+			    font-size: 12px;
+			    font-weight: 300;
+			    text-anchor: middle;
+			}
+			
+			.w2mapchart_tooltip{
+				background: #FFF none repeat scroll 0% 0%;
+			    border: 1px solid #F0F0F0; 
+			    border-radius: 5px; 
+			    font-size: 12px;
+			    padding: 1px;
+			    color: #0F000F;
+			}
+			.w2mapchart_tooltip .kv{
+				background: #FFF none repeat scroll 0% 0%;
+			    border: 1px solid #F0F0F0; 
+			    border-radius: 5px; 
+			    font-size: 12px;
+			    padding: 4px;
+			    color: #0F000F;
+			}
+		</style>
+        <script src="/js/vslz.js" type="javascript"><![CDATA[ ]]></script> 
+        <script type="javascript">
+        	<![CDATA[ 
+        		//var menuId = WebSquare.net.getParameter( "menuId" );
+				var menuId='TMMMMM001SD006TH024_01';
+				
+				//Websquare 실행을 위한 선언
+				pFn.execSubmission = function(submissionID) {
+				
+					WebSquare.ModelUtil.executeSubmission(submissionID);
+					
+				};
+				
+					
+				pFn.getMapCodeInfo = function() {
+					pFn.execSubmission("getMapCode");
+				};
+				
+				pFn.fn_CreateSubChart01 = function(dataObj){
+					txt_chart1_title.setValue( dm_search.get("sigunguNm") + " 지방보조금 현황" );
+					
+					subChart01.setJSONData(dataObj);
+					setCmmThemOpt(subChart01, "Column", "MIL", false,0,0);
+					subChart01.draw();
+					
+					test();
+					
+					subChart01.setAccessibility(0);
+					subChart01.setAccessibility(1);
+					setChartLabelInit();
+				
+				};
+				
+				pFn.fn_CreateSubChart02 = function(dataObj){				
+				
+					subChart02.setJSONData(dataObj);
+					setCmmThemOpt(subChart01, "Line", "PER", false, 0,0);
+					subChart02.draw();
+				};
+				
+				//지도를 클릭 했을 때 이벤트
+				pFn.mapchart_onmapclick = function ( properties ) { 
+					
+					$(".w2mapchart_map .municipality").css("fill","#5185CB");
+            		$(".w2mapchart_map .municipality.c"+properties.code).css("fill","#97B6E0");            		
+            		
+            		// 기존 조회된 시도와 같다면 생략(더블클릭으로 인한 재조회 방지)
+            		if(dm_search.get("sigunguKey") != properties.code){
+            			
+            			// 조회구분 설정 (1:전국, 2:시도, 3:시군구)
+						if(dm_search.get("sigunguKey") == '') {
+							dm_search.set("gbn01", "2");
+						}
+						else {
+							dm_search.set("gbn01", "3");
+						}
+						
+						var nameValue = '';		//캡션에 '계' 붙이기
+	            		
+	            		// 전국지도에서 클릭시 시도 시군구 동일 값 설정
+	            		if(dm_search.get("gbn01") == '2'){
+		            		dm_search.set("sidoKey", 	properties.code);	// 시도코드 설정
+		            		dm_search.set("sigunguKey", properties.code);	// 시군구코드 설정
+		            		
+		            		if(properties.name      == '서울') { nameValue = '서울지역'; sb_city.setText('서울'); }
+                            else if(properties.name == '부산') { nameValue = '부산지역'; sb_city.setText('부산'); }
+                            else if(properties.name == '대구') { nameValue = '대구지역'; sb_city.setText('대구'); }
+                            else if(properties.name == '인천') { nameValue = '인천지역'; sb_city.setText('인천'); }
+                            else if(properties.name == '광주') { nameValue = '광주지역'; sb_city.setText('광주'); }
+                            else if(properties.name == '대전') { nameValue = '대전지역'; sb_city.setText('대전'); }
+                            else if(properties.name == '울산') { nameValue = '울산지역'; sb_city.setText('울산'); }
+                            else if(properties.name == '세종') { nameValue = '세종지역'; sb_city.setText('세종'); }
+                            else if(properties.name == '경기') { nameValue = '경기지역'; sb_city.setText('경기'); }
+                            else if(properties.name == '강원') { nameValue = '강원지역'; sb_city.setText('강원'); }
+                            else if(properties.name == '충북') { nameValue = '충북지역'; sb_city.setText('충북'); }
+                            else if(properties.name == '충남') { nameValue = '충남지역'; sb_city.setText('충남'); }
+                            else if(properties.name == '전북') { nameValue = '전북지역'; sb_city.setText('전북'); }
+                            else if(properties.name == '전남') { nameValue = '전남지역'; sb_city.setText('전남'); }
+                            else if(properties.name == '경북') { nameValue = '경북지역'; sb_city.setText('경북'); }
+                            else if(properties.name == '독도') { nameValue = '경북지역'; sb_city.setText('경북'); }
+                            else if(properties.name == '경남') { nameValue = '경남지역'; sb_city.setText('경남'); }
+                            else if(properties.name == '제주') { nameValue = '제주지역'; sb_city.setText('제주'); }
+                            else {  }
+		            		
+		            		dm_search.set("sidoNm", nameValue);		// 시도명 설정
+		            		dm_search.set("sigunguNm", nameValue);	// 시군구명 설정
+	            		}
+	            		else{	// 시군구 지도에서 클릭시 시군구만 설정
+	            			dm_search.set("sidoKey", properties.code.slice(0, 2));	// 시도코드 설정
+	            			dm_search.set("sigunguKey", properties.code);	// 시군구코드 설정
+		            		
+		            		var temp = dm_search.get("sidoNm").slice(0,2);
+		            		
+		            		//지도클릭으로 조회 후 Select Box 변경 후 다시 지도클릭 조회로 생기는 버그 처리
+		            		if(sb_city.getText() != temp){
+		            			nameValue = temp + properties.name;
+		            			sb_city.setText(temp);
+		            			sel_gungu.setText(temp + properties.name);
+		            		}
+		            		else{
+		            			nameValue = sb_city.getText() + properties.name;
+		            			sel_gungu.setText(sb_city.getText() + properties.name);
+		            			
+		            		}
+
+		            		
+		            		nameValue = sb_city.getText() + properties.name; sel_gungu.setText(sb_city.getText() + properties.name);
+							nameValue = nameValue.replace("독도","울릉군");
+		            		dm_search.set("sigunguNm", nameValue);	// 시군구명 설정
+	            		}
+	            		// 하위 차트 조회
+						pFn.execSubmission("getSubSelect01");
+						pFn.execSubmission("getSubSelect02");
+					}              	
+            	};
+            	  
+            	            
+            	//지도정보가 변경되기전 이벤트 : 지도를 시,군 단계까지 제한하는 코드. 아래 주석(return false)을 풀면 2단계로 지도가 확장되지 않는다.
+            	pFn.mapchart_onbeforemapchange = function ( info ) {
+	              	if(info.newMapCode.length >= 5) {
+	              		return false; 
+	              	}
+				};
+              	
+              	//지도정보가 변경 되었을때 이벤트 : 현재 지도에 대한 코드 정보 저장
+              	pFn.mapchart_onaftermapchange = function () {
+              		dm_curCity_info.set("curCode",this.getCurrentMap());
+              		dm_curCity_info.set("parentCode",this.getParentMap());
+              		
+              		// 전국지도라면 본청보기 숨기기
+              		if(this.getCurrentMap() == 0){
+						$("#boneMap").addClass("hidden");		// 본청보기 숨기기
+					}
+					else{
+            			$("#boneMap").removeClass("hidden");	// 본청보기 보이기  		
+					}
+	            };
+	            
+	            //본청보기 버튼 클릭 시 이벤트
+              	pFn.boneMove = function(){ 
+					// 조회구분 설정 (3:시군구, 본청)
+            		dm_search.set("gbn01", '3');
+           			dm_search.set("sigunguKey", dm_search.get("sidoKey"));			// 본청 코드와 시도 코드가 같음
+            		dm_search.set("sigunguNm", sb_city.getText() + "본청");	// 시군구명 설정
+					
+					//셀렉트 박스 값 변경
+            		sel_gungu.setText(sb_city.getText() + "본청");
+            		
+            		// 하위 차트 조회
+					pFn.execSubmission("getSubSelect01");
+					pFn.execSubmission("getSubSelect02");
+              	};
+              	
+	            //상위 지도로 버튼 클릭 시 이벤트
+              	pFn.topMapMove = function(){ 
+              		var parentCode = dm_curCity_info.get("parentCode");
+              		mapchart.changeMap(parentCode);
+              		
+              		// 조회구분값 설정 and 기본 텍스트 설정
+					dm_search.set("gbn01", "1");	
+					dm_search.set("sidoKey", "");	
+					dm_search.set("sidoNm", "전국");	
+					dm_search.set("sigunguKey", "");	
+					dm_search.set("sigunguNm", "전국");	
+
+            		//셀렉트 박스 값 변경
+					sb_city.setValue('');
+					sel_gungu.setValue('');
+					
+					// 하위 차트 조회				
+					pFn.execSubmission("getSubSelect01");
+					pFn.execSubmission("getSubSelect02");
+              	};
+				
+				// 화면 초기 설정
+				pFn.onLoad = function(){
+				
+					// 연도 설정
+					//pFn.setYear(10);
+					pFn.execSubmission("getYear");	
+				};
+				
+				// 화면 onLoad
+				pFn.onLoad();
+				
+				pFn.getSubSelect01_submitdone = function(e) {
+					var dataObj = {"chart":{},"data":dl_subChart01.getAllJSON()};
+					pFn.fn_CreateSubChart01(dataObj);	
+				};
+				
+				pFn.getSubSelect02_submitdone = function(e) {
+					var dataObj = {"chart":{},"data":dl_subChart02.getAllJSON()};
+					pFn.fn_CreateSubChart02(dataObj);
+				};
+				
+				pFn.selectYear_onviewchange = function(info) { 
+					dm_search.set("year", selectYear.getValue());
+					
+					//맵차트 맵 변경
+					setChangeMap("settle", selectYear.getValue());
+					
+					// 시도 셀렉트 박스 변경
+					pFn.execSubmission("getSido");
+				};
+				
+				pFn.getYear_submitdone = function(e) {
+					dm_search.set("year", selectYear.getValue());
+					
+					// 조회구분값 설정 and 기본 텍스트 설정
+					dm_search.set("sidoKey", "");	
+					dm_search.set("sidoNm", "전국");
+					dm_search.set("sigunguKey", "");	
+					dm_search.set("sigunguNm", "전국");
+					dm_search.set("gbn01", "1");	// 전국 조회 코드값
+	
+					// 하위 차트 조회				
+					pFn.execSubmission("getSubSelect01");
+					pFn.execSubmission("getSubSelect02");
+				};
+				
+				pFn.addMenuLogCallback = function(){	
+					//로그 뻥튀기 유지하기 위해 콜백함수로 다음 로직 위치 변경함 -> 로그 뻥튀기 제거한다면 밑에 로직 개선 전으로 위치 돌려놔야함			
+					if(sb_city.getValue() == ''){
+						pFn.getYear_submitdone();
+						mapchart.changeMap("0");
+					}else{
+						if(sb_city.getValue() == '32'){
+							dm_search.set("gbn01", '2');
+		           			dm_search.set("sidoKey", 	"29" );	// 시도코드 설정
+		            		dm_search.set("sidoNm", 	'세종지역');	// 시도명 설정
+		            		dm_search.set("sigunguKey",	"29");	// 시군구코드 설정
+		            		dm_search.set("sigunguNm", 	'세종지역');	// 시군구명 설정
+		            		mapchart.changeMap( '29');	
+		            		// 하위 차트 조회
+							pFn.execSubmission("getSubSelect01");
+							pFn.execSubmission("getSubSelect02");
+						}else{
+							dc_search_map.set('year',selectYear.getValue());
+							dc_search_map.set('itemCd','A000');
+							dc_search_map.set('kindCd',sel_gungu.getValue());
+							if(sel_gungu.getValue()==''){
+								dc_search_map.set('kindCd',sb_city.getValue()+"00000");	
+							};
+							pFn.getMapCodeInfo();
+						}
+					}
+				};
+				
+				pFn.btn_search_onclick = function(e) { 
+					ajaxLib.AddMenuLog(menuId, pFn.addMenuLogCallback); //로그 뻥튀기 유지하기 위해 콜백함수 적용
+				};
+		
+		pFn.getMapCode_submitdone = function(e) {
+		
+			// 전국지도에서 클릭시 시도 시군구 동일 값 설정
+           		if(sel_gungu.getValue() == ''){
+           			dm_search.set("gbn01", '2');
+           			dm_search.set("sidoKey", 	dm_mapInfo.get('code'));	// 시도코드 설정
+            		dm_search.set("sidoNm", 	sb_city.getText());			// 시도명 설정
+            		dm_search.set("sigunguKey",dm_mapInfo.get('code'));		// 시군구코드 설정
+            		dm_search.set("sigunguNm", 	sb_city.getText() + "지역");		// 시군구명 설정
+            		
+            		// 하위 차트 조회
+					pFn.execSubmission("getSubSelect01");
+					pFn.execSubmission("getSubSelect02");
+           		}
+           		else{	// 시군구 지도에서 클릭시 시군구만 설정
+           			dm_search.set("gbn01", '3');
+           			dm_search.set("sigunguKey",dm_mapInfo.get('code'));	// 시군구코드 설정
+            		dm_search.set("sigunguNm", 	sel_gungu.getText());	// 시군구명 설정
+            		
+            		// 하위 차트 조회
+					pFn.execSubmission("getSubSelect01");
+           		}			
+           		mapchart.changeMap( dm_mapInfo.get('code').substr(0,2));
+				mapchart.changeMap( dm_mapInfo.get('code'));	
+		};
+		function test(){
+	 	var chartOption =  { 
+					//  "caption": "Revenues and Profits",
+				    //  "subCaption": "For last year",
+				    //  "xAxisname": "Month",
+				    //  "pYAxisName": "현재액 (백만원)",
+				    //  "sYAxisName": "증가율 (%)",
+				       
+				      //"numberPrefix": "$",
+				    //  "sNumberSuffix": "%",
+				      "sYAxisMaxValue": "50"
+											     };
+			subChart01.changeType("MSCombiDY2D");
+			subChart01.setChartAttribute(chartOption);
+	        subChart01.refresh();
+	        //증가율 포함된 그래프
+	        //subChart01.setChartColumnRef('data:dl_subChart01','label',"[[{'id':'value','seriesname':'현재액','renderas':'Column2D'},{'id':'value01','renderas':'Line','seriesname':'증가율','parentYAxis':'S'}]]");
+	        //증가율 제외된 그래프
+	        subChart01.setChartColumnRef('data:dl_subChart01','label',"[[{'id':'value','seriesname':'현재액','renderas':'Column2D'}]]");
+	   };
+	
+			
+		//코멘트 버튼 실행 함수
+		var commTxtBtn = true;
+	    pFn.comment_onclick = function() {
+	    	if(commTxtBtn) {
+            	comm_txt.show();
+	    		commTxtBtn = false;
+	    	} else {
+            	comm_txt.hide();
+	    		commTxtBtn = true;
+	    	}
+       	};
+       	
+       	/* 도움말 s*/
+        ajaxLib.commentAJAX('TMMMMM001SD006TH024_01','1');
+
+		commentAJAXCallBack = function(result) {	
+			$("#comm_txt").append(result.data[0].menuDesc);			
+		}  		      
+        /* 도움말 e*/	
+               	
+			]]>
+		</script>
+    </head>
+	<body class="">
+		<xf:group id="" style="" class="wrap" tagname="div">
+    		<w2:wframe id="wf_head" style="position: relative;" src="/ui/portal/common/header.xml"></w2:wframe>
+    		<xf:group id="" style="" class="container">
+    			<xf:group class="content_x" id="" style="">
+    				<xf:group id="grp_subtop">
+
+    					<xf:group class="h1set" id="" style="" tagname="div">
+    						<xf:group adaptiveThreshold="" class="loca" id="" style="" tagname="div">
+    							<xf:group class="loca_home1" id="" style="" tagname="div">
+    								<w2:anchor class="loca_home_txt" href="/portal/main.do" id="" outerDiv="false">
+    									<xf:label>home</xf:label>
+    								</w2:anchor>
+    							</xf:group>
+    							<xf:group class="loca_home2" id="" style="" tagname="div">
+    								<w2:span id="" label=" &gt; " style=""></w2:span>
+    								<w2:anchor id="sub_nav1" outerDiv="false" title="알기쉬운 지방재정바로가기">
+    									<xf:label>알기쉬운지방재정</xf:label>
+    								</w2:anchor>
+    								<w2:span id="" label=" &gt; " style=""></w2:span>
+    								<w2:anchor id="sub_nav2" outerDiv="false">
+    									<xf:label>테마별시각화</xf:label>
+    								</w2:anchor>
+    							</xf:group>
+    						</xf:group>
+    					</xf:group><xf:group class="h1_tit" style="">
+    						<w2:textbox id="title" label="" tagname="h1"></w2:textbox>
+    					</xf:group><xf:group class="vs_topcont" id="" style="" tagname="div">
+    						<xf:group class="vs_tab" id="" tagname="div">
+    							<xf:group class="vs_tab_all" id="" tagname="div">
+    								<w2:anchor id="" outerDiv="false" class="vs_tab_item_select" title="처음으로">
+    									<xf:label>처음으로</xf:label>
+    								</w2:anchor>
+    							</xf:group>
+    							<xf:group class="vs_tab_item" id="" tagname="div"></xf:group>
+    							<xf:group class="vs_tab_item" id="" tagname="div"></xf:group>
+    							<xf:group class="vs_tab_item" id="" tagname="div"></xf:group>
+    						</xf:group>
+    					<xf:group id="" style="" class="vs_comment_cont" tagname="div">
+    						<xf:group id="" class="vs_comment" tagname="div">
+    							<w2:anchor id="" outerDiv="false" ev:onclick="pFn.comment_onclick" title="주석보기">
+    								<xf:label>주석보기</xf:label>
+    							</w2:anchor>
+    						</xf:group>
+    						<xf:group id="comm_txt" style="display:none;" class="vs_comment_txt" tagname="div">
+    						</xf:group>
+   						</xf:group>
+   						</xf:group>
+    					<xf:group id="grp_content">
+    						<xf:group id="search_year_grp" style="position: relative;" class="fl">
+    							<xf:select1 disabledClass="w2selectbox_disabled" renderType="select" appearance="minimal" direction="auto" chooseOption="false"
+    								id="selectYear" title="연도" style="position:relative;width:120px;height:21px;" displayMode="label" allOption="false"
+    								submenuSize="auto" disabled="false" ref="" emptyItem="true" ev:onviewchange="pFn.selectYear_onviewchange" class="vs_select_r">
+    								<xf:choices>
+    									<xf:itemset nodeset="data:dl_year">
+    										<xf:label ref="label"></xf:label>
+    										<xf:value ref="value"></xf:value>
+    									</xf:itemset>
+    								</xf:choices>
+    							</xf:select1>
+    							<xf:select1 allOption="" appearance="minimal" chooseOption="true" direction="auto" disabled="false"
+    								disabledClass="w2selectbox_disabled" displayMode="label" ev:onviewchange="pFn.sb_Year_onviewchange" id="sb_city"
+    								optionOrder="false" ref="" renderType="select" style="height:23px;" submenuSize="auto" title="시도선택" class="vs_select_r"
+    								chooseOptionLabel="지역">
+    								<xf:choices>
+    									<xf:itemset nodeset="data:dc_sido_list">
+    										<xf:label ref="code_nm"></xf:label>
+    										<xf:value ref="code"></xf:value>
+    									</xf:itemset>
+    								</xf:choices>
+    							</xf:select1>
+    							<xf:select1 allOption="" appearance="minimal" chooseOption="true" direction="auto" disabled="false"
+    								disabledClass="w2selectbox_disabled" displayMode="label" id="sel_gungu" optionOrder="false" ref="" renderType="select"
+    								style="height:23px;" submenuSize="auto" title="군,구 선택" visibleRowNum="5" class="vs_select_r" chooseOptionLabel="자치단체">
+    								<xf:choices>
+    									<xf:itemset nodeset="data:Linked_gunguList">
+    										<xf:label ref="code_nm"></xf:label>
+    										<xf:value ref="code"></xf:value>
+    									</xf:itemset>
+    								</xf:choices>
+    							</xf:select1>
+    							<xf:trigger class="but_blueL" ev:onclick="pFn.btn_search_onclick" id="btn_search"
+    								style="position: relative;width: 80px;height: 23px;" type="button" title="조회">
+    								<xf:label><![CDATA[조회]]></xf:label>
+    							</xf:trigger>
+    						</xf:group>
+
+    						<!--  float 정렬 후 항상  clear를 추가 -->
+    						<xf:group class="clear" id="" tagname="div"></xf:group>
+
+    						<!--  박스와박스사이여백 -->
+    						<xf:group id="" tagname="div" class="pb16"></xf:group>
+
+    						<!--  1단 그래프에는 graph_all_wrap을 추가  -->
+
+    						<xf:group id="" style="" class="vs_box_33_r">
+    							<xf:group id="" class="vs_box_cont_notit" tagname="div">
+    								<xf:group id="" class="" tagname="div">
+    									<w2:mapchart event_drilldown="onclick" event_select="onmouseover"
+    										ev:onaftermapchange="pFn.mapchart_onaftermapchange" event_tooltipon="onmouseover" event_tooltipoff="onmouseout"
+    										ev:onmapclick="pFn.mapchart_onmapclick" zoomMax="1" id="mapchart" event_drillup="none" event_drag="none"
+    										style="position: relative; margin: 0 auto;width:100%;height:410px;" event_deselect="onmouseout" dataMapRatio_level1="simp1"
+    										dataMapRatio_level0="simp01" ev:onbeforemapchange="pFn.mapchart_onbeforemapchange" zoomMin="1">
+    									</w2:mapchart>
+    								</xf:group>
+    								<xf:trigger id="boneMap" ev:onclick="pFn.boneMove" class="but_purple fr hidden" type="button" title="본청보기">
+    									<xf:label><![CDATA[본청보기]]></xf:label>
+    								</xf:trigger>
+
+    								<xf:trigger id="topMap" ev:onclick="pFn.topMapMove" class="but_purple fl" type="button" title="전국지도">
+    									<xf:label><![CDATA[전국지도]]></xf:label>
+    								</xf:trigger>
+    							</xf:group>
+    						</xf:group>
+    						<xf:group class="vs_box_66" id="" style="" tagname="div">
+    							<xf:group class="vs_box_top" id="" style="" tagname="div">
+    								<xf:group class="vs_box_tit" id="" tagname="div">
+    									<w2:textbox id="txt_chart1_title" label=""></w2:textbox>
+    								</xf:group>
+    								<xf:group class="vs_box_option" id="" tagname="div">
+    									<xf:group class="vs_box_option_txt" id="" tagname="div">
+    										<w2:textbox id="" label="[단위:백만원,%]"></w2:textbox>
+    									</xf:group>
+    								</xf:group>
+    							</xf:group>
+    							<xf:group class="vs_box_cont" id="" style="" tagname="div">
+    								<w2:fusionchart accessibility="true" id="subChart01" chartType="MSCombiDY2D" style="position: relative; height: 380px;min-width:320px;" seriesType="" drawType="javascript">
+    								</w2:fusionchart>
+    							</xf:group>
+    						</xf:group><xf:group id="" class="graph_half_wrap fr" tagname="div" style="display : none;">
+    							<!-- 2단 그래프에는 graph_half_wrap을 추가  -->
+    							<xf:group id="" class=" mb20" tagname="div">
+    								
+    							</xf:group>
+
+    							<!-- 2단 그래프에는 graph_half_wrap을 추가  -->
+    							<xf:group id="" class="" tagname="div">
+    								<w2:fusionchart accessibility="true" id="subChart02" chartType="Column2D"
+    									style="position: relative; height: 200px;" seriesType="simple" drawType="javascript">
+    								</w2:fusionchart>
+    							</xf:group>
+    							<!--  float 정렬 후 항상  clear를 추가 -->
+    							<xf:group class="clear" id="" tagname="div"></xf:group>
+    						</xf:group>
+    						
+    					</xf:group>
+    					
+    					
+    					
+    				</xf:group>
+    				<w2:wframe id="wf_content" src=""></w2:wframe>
+    			</xf:group>
+			</xf:group>
+		</xf:group>
+		<!--  풋터와의 여백 -->
+		<xf:group class="mb40" id="" tagname="div"></xf:group>
+		<w2:wframe id="wf_foot" style="position: relative;" src="/ui/portal/common/footer.xml"></w2:wframe>
+	</body>
+</html>
