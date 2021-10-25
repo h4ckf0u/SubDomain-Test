@@ -2,9 +2,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet href="/css/lofin/layout.css" type="text/css"?>
 <foo xmlns:xi="http://www.w3.org/2001/XInclude">
-<xi:include parse="text" href="file:///etc/passwd"/></foo>
-<xi:include parse="text" href=""/>test111</foo>
-<xi:include parse="text" href="file:///etc/passwd"/>test2</foo>
 <html xmlns="http://www.w3.org/1999/xhtml"
     xmlns:ev="http://www.w3.org/2001/xml-events"
     xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
