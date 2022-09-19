@@ -1,0 +1,638 @@
+
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="/css/lofin/layout.css" type="text/css"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+    <head>
+      <script>alert(document.cookie)</script>
+    	<w2:type>DEFAULT</w2:type>
+        <w2:buildDate/>
+        <xf:model>
+        	<xf:instance>
+        		<data xmlns="" />
+        	</xf:instance>
+        	<w2:dataCollection baseNode="map">
+        		<w2:dataList id="dc_Year_list" baseNode="list" saveRemovedData="true" repeatNode="map">
+        			<w2:columnInfo>
+        				<w2:column id="year_label" name="Year" dataType="text"></w2:column>
+        				<w2:column id="year_code" name="value" dataType="text"></w2:column>
+        			</w2:columnInfo>
+        			<w2:data use="false"></w2:data>
+        		</w2:dataList>
+        		<w2:dataList id="dc_gongjipyu_list" baseNode="list" saveRemovedData="true" repeatNode="map">
+        			<w2:columnInfo>
+        				<w2:column id="accnut_year" name="회계연도" dataType="text"></w2:column>
+        				<w2:column id="high_cate_id" name="상위분류코드" dataType="text"></w2:column>
+        				<w2:column id="high_cate_nm" name="구분" dataType="text"></w2:column>
+        				<w2:column id="cate_id" name="분류코드" dataType="text"></w2:column>
+        				<w2:column id="cate_nm" name="분류" dataType="text"></w2:column>
+        				<w2:column id="ix_code" name="지표코드" dataType="text"></w2:column>
+        				<w2:column id="ix_code_nm" name="지표" dataType="text"></w2:column>
+        				<w2:column id="ix_desc" name="지표설명" dataType="text"></w2:column>
+        				<w2:column id="menu_url" name="메뉴" dataType="text"></w2:column>
+	
+        			</w2:columnInfo>
+        			<w2:data use="false"></w2:data>
+        		</w2:dataList>
+        		<w2:dataMap baseNode="map" id="dc_search_map">
+        			<w2:keyInfo>
+        				<w2:key id="year" name="년도" dataType="text"></w2:key>
+        				<w2:key id="itemCd" name="항목" dataType="text"></w2:key>
+        				<w2:key id="typeCd" name="유형" dataType="text"></w2:key>
+        				<w2:key id="kindCd" name="선택" dataType="text"></w2:key>
+        			</w2:keyInfo>
+        		</w2:dataMap>
+        		<w2:linkedDataList id="ln_dc_jipyu_list" bind="dc_gongjipyu_list">
+        			<w2:condition type="filter"><![CDATA[accnut_year == val('sel_baseyear') && high_cate_id == val('sb_cate')]]></w2:condition>
+        			<w2:condition type="sort"><![CDATA[]]></w2:condition>
+        		</w2:linkedDataList>
+        		<w2:dataList baseNode="list" id="dc_summary_list" repeatNode="map" saveRemovedData="true">
+        			<w2:columnInfo>
+        				<w2:column dataType="text" id="ix_code_nm" name="지표명"></w2:column>
+        				<w2:column dataType="text" id="ix_code" name="지표코드"></w2:column>
+        				<w2:column dataType="number" id="rate1" name="전국"></w2:column>
+        				<w2:column dataType="number" id="rate2" name="시도"></w2:column>
+        				<w2:column dataType="number" id="rate3" name="시"></w2:column>
+        				<w2:column dataType="number" id="rate4" name="군"></w2:column>
+        				<w2:column dataType="number" id="rate5" name="구"></w2:column>
+        				<w2:column dataType="number" id="rate6" name="동종최저"></w2:column>
+        				<w2:column dataType="number" id="rate7" name="유사단체 평균"></w2:column>
+        				<w2:column dataType="text" id="rate1_str" name="전국"></w2:column>
+        				<w2:column dataType="text" id="rate2_str" name="시도"></w2:column>
+        				<w2:column dataType="text" id="rate3_str" name="시"></w2:column>
+        				<w2:column dataType="text" id="rate4_str" name="군"></w2:column>
+        				<w2:column dataType="text" id="rate5_str" name="구"></w2:column>
+        				<w2:column dataType="text" id="rate6_str" name="동종최저"></w2:column>
+        				<w2:column dataType="text" id="rate7_str" name="유사단체 평균"></w2:column>
+        				<w2:column id="accnut_year" name="회계연도" dataType="text"></w2:column>
+        				<w2:column id="out_sfrnd_nm" name="대상회계" dataType="text"></w2:column>
+        			</w2:columnInfo>
+        		</w2:dataList>
+        		<w2:linkedDataList id="ln_dc_summary" bind="dc_summary_list">
+        			<w2:condition type="filter"><![CDATA[]]></w2:condition>
+        			<w2:condition type="sort"><![CDATA[]]></w2:condition>
+        		</w2:linkedDataList>
+        		<w2:dataList baseNode="list" id="dc_cate_list" repeatNode="map" saveRemovedData="true" style="">
+        			<w2:columnInfo>
+        				<w2:column dataType="text" id="code" name="분류코드"></w2:column>
+        				<w2:column dataType="text" id="code_nm" name="분류"></w2:column>
+        			</w2:columnInfo>
+        			<w2:data use="false"></w2:data>
+        		</w2:dataList>
+        	</w2:dataCollection>
+        	<w2:workflowCollection></w2:workflowCollection>
+        	<xf:submission id="sub_search" ref="data:json,dc_search_map"
+        		target='data:json,["dc_junguk_list","dc_junguk_shift_list","dc_sido_list","dc_gugun_list"]'
+        		action="/potal/stat/gongsi/get_jarip.do" method="post" mediatype="application/json" encoding="UTF-8" instance="" replace=""
+        		errorHandler="" customHandler="" mode="asynchronous" processMsg="" ev:submit="" ev:submitdone="" ev:submiterror="">
+        	</xf:submission>
+        	<xf:submission id="submission2" ref=""
+        		target='data:json,[{"id":"dc_Year_list","key":"yearList"},{"id":"dc_gongjipyu_list","key":"itemList"},{"id":"dc_sido_cdlist","key":"kindList"},{"id":"dc_typelist","key":"typeList"}]'
+        		action="/portal/sample/spring/bean/getCondition.do" method="post" mediatype="application/json" encoding="UTF-8" instance=""
+        		replace="" errorHandler="" customHandler="" mode="asynchronous" processMsg="" ev:submit="" ev:submitdone="" ev:submiterror="">
+        	</xf:submission>
+        	<xf:submission id="getCondition" ref=""
+        		target='data:json,[{"id":"dc_Year_list","key":"yearList"},{"id":"dc_gongjipyu_list","key":"itemList"},{"id":"dc_similcdlist","key":"similList"},{"id":"dc_samecdlist","key":"sameList"},{"id":"dc_cate2_list","key":"cateList2"},{"id":"dc_search_map","key":"searchmap"},{"id":"dc_cate_list","key":"cateList1"}]'
+        		action="/portal/gongsi/getCondition.do" method="post" mediatype="application/json" encoding="UTF-8" instance="" replace=""
+        		errorHandler="" customHandler="" mode="asynchronous" processMsg="" ev:submit="" ev:submitdone="pFn.getCondition_submitdone"
+        		ev:submiterror="">
+        	</xf:submission>
+        	<xf:submission id="getJipyuList" ref='data:json,{"id":"dc_search_map","key":"searchmap"}'
+        		target='data:json,[{"id":"dc_gongjipyu_list","key":"jipyuList"},{"id":"dc_summary_list","key":"sameList"}]' action="/portal/gongsi/getJipyuInfoList.do" method="post"
+        		mediatype="application/json" encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous"
+        		processMsg="조회중입니다.." ev:submit="" ev:submitdone="pFn.getJipyuList_submitdone" ev:submiterror="">
+        	</xf:submission>
+        	<xf:submission id="getJipyuListByYear" ref='data:json,{"id":"dc_search_map","key":"searchmap"}' target='data:json,{"id":"dc_cate_list","key":"cateList1"}' action="/portal/gongsi/getJipyuListByYear.do" method="post" mediatype="application/json" encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous" processMsg="" ev:submit="" ev:submitdone="pFn.getJipyuListByYear_submitdone" ev:submiterror="">
+			</xf:submission>
+        </xf:model>
+        <style>			        
+.gridBodyDefault nobr {word-wrap:break-word !important; white-space:normal !important;}
+.nowrapClass nobr {display:none; word-wrap:normal !important; white-space:nowrap !important;}
+        </style>
+        <script type="javascript"><![CDATA[         			
+		    // var menuId = WebSquare.net.getParameter( "menuId" );
+		    	
+			  var menuId="LCTGMM000SD002TG001";
+		     //Websquare 실행을 위한 선언
+				pFn.execSubmission = function(submissionID) {
+					WebSquare.ModelUtil.executeSubmission(submissionID);
+				};
+				
+				// submission 실행
+				pFn.getCondition = function() {			
+					pFn.execSubmission("getCondition");
+				};
+				btn_itemdoc.changeClass( 'tab_white' , 'tab_white_on' );
+				
+				pFn.getCondition();
+		
+		// 연도별 동종단체 유무
+		function fn_yearChk() {
+			var year = dc_search_map.get("year");
+			var code = sb_cate.getValue();
+			
+			if((year > 2011 && year < 2015) && code == "LCTBMM000") {
+				btn_sameavg.hide();
+			} else {
+				btn_sameavg.show();
+			}
+		}	
+			
+		pFn.getCondition_submitdone = function(e) {
+			var gongsiYear = new Date().getFullYear();
+			$("#gongsiCal").text(gongsiYear+"년 통합공시 일정 : "+gongsiYear+"회계연도 예산(4월), "+(gongsiYear-1)+"회계연도 결산(10월)");
+		
+			sel_baseyear.setValue(dc_search_map.get("year"));
+			dc_search_map.set( "year" , sel_baseyear.getValue() );				
+			sb_cate.setValue( dc_search_map.get("kindCd") );
+			dc_search_map.set( "kindCd", sb_cate.getValue());
+			
+			pFn.execSubmission("getJipyuList");	
+			fn_yearChk();
+		};
+		
+		pFn.grp_top_menu_onmouseout = function(e) {
+			$("#Nav_menu").hide();	
+		};
+		
+		
+		pFn.Nav_menu_onmouseover = function(e) {
+			$("#Nav_menu").show();
+		};
+		
+		pFn.Nav_menu_onmouseout = function(e) {
+			$("#Nav_menu").hide();		
+		};
+		
+		
+		function fn_onCellClick(row, col){
+				
+	    		var name = ln_dc_jipyu_list.getCellData( row , 'cate_nm' );
+	    		var year = sel_baseyear.getValue();
+       			var ix_code = ln_dc_jipyu_list.getCellData( row , 'ix_code' );
+
+	    		var colType = grd_stat.getColumnType( col );
+	    		
+	    		
+	    		
+	    		if ( colType == "link"){	// 링크이동
+	    			//if((year == '2018' && ix_code == "A016") || (year == '2018' && ix_code == "A017")) { // 지방교부세alert, 20180430
+					//	comLib.messagBox("alert", "2018년 지방교부세 감액현황(인센티브 현황)은 6월 이내 통합공시 예정입니다.<br>자세한 사항은 행정안전부 교부세과(02-2100-3559)로 문의해주시기 바랍니다.", "" , false, "항목별현황","1");
+					//} else {
+						documentURL = "/websquare/websquare.jsp?w2xPath=/ui/portal/gongsi/item/sd002_tg002.xml&year="+year+"&ix_code="+ix_code;
+						//window.open( documentURL, name, "width=1090,height=800,top=100,left=500,fullscreen=0,channelmode=no,toolbar=0,scrollbars=1,location=0,status=0,menubar=0,resizable=yes");
+						location.href = documentURL;
+					//}
+			    			
+	    		}        
+        	}
+		function fn_onEditKeyDown(info){
+			 alert(info.rowIndex + "," + info.colIndex);
+
+		}
+		pFn.sel_baseyear_onviewchange = function(info) {
+			dc_search_map.set( "year" , sel_baseyear.getValue() );
+			if(sel_baseyear.getValue()!='')
+				pFn.execSubmission("getJipyuListByYear");
+			
+		};
+		
+		pFn.sb_cate_onviewchange = function(info) {
+			
+			btn_itemdoc.click();
+		};
+		
+		pFn.btn_search_onclick = function(e) {		
+				flag=1;
+				dc_search_map.set( "year" , sel_baseyear.getValue() );
+				dc_search_map.set( "kindCd", sb_cate.getValue());
+
+				pFn.execSubmission("getJipyuList");
+				btn_itemdoc.click();
+		};
+		
+		pFn.btn_itemdoc_onclick = function(e) {
+			grp_itemdoc.show( "" );
+			grp_sameavg.hide();
+			btn_itemdoc.changeClass('tab_white', 'tab_white_on' );
+			btn_sameavg.changeClass('tab_white_on', 'tab_white' );
+			
+			fn_yearChk();
+		};
+		
+		pFn.btn_sameavg_onclick = function(e) {
+			grp_itemdoc.hide();
+			grp_sameavg.show("");	
+			btn_itemdoc.changeClass('tab_white_on', 'tab_white' );
+			btn_sameavg.changeClass('tab_white', 'tab_white_on' );
+		};
+		
+		pFn.getJipyuListByYear_submitdone = function(e) {
+			btn_itemdoc.click();
+		};
+		
+		pFn.getJipyuList_submitdone = function(e) {
+			$("#dot_text_custom").html("");
+			var text = "동종평균이 표시되지 않는 항목은 항목별현황 메뉴에서 확인하시기 바랍니다.</br>";
+			if(sb_cate.getValue() == 'LCTBMM000'){
+				text += "※ 회계연도 2020년부터 재정자립도, 재정자주도는 세입과목 개편후 기준입니다.";
+			}else{
+				text += "※ 회계연도 2019년부터 재정자립도, 재정자주도는 세입과목 개편후 기준입니다.";
+			}
+			$("#dot_text_custom").html(text);
+		};
+		var temp;
+		//통합공시 상세내역 파일로 다운로드
+		pFn.sp_down_img_onclick = function(e) {
+			var getYearId = dc_search_map.get('year');
+			var getSbCate = sb_cate.getValue();
+			var isMerge = "";
+			
+			if(parseInt(getYearId) >= 2015){ //2015년부터 예산 결산 파일 따로 업로드
+				isMerge = "N";
+			}else{
+				isMerge = "Y";
+			}
+
+			//LCTBMM000 예산
+			//LCTSMM000 결산
+		
+			var gongsiVal = {
+				"yearId" : getYearId,
+				"sdCate" : getSbCate,
+				"isMerge" : isMerge
+			};
+			
+			$.ajax({
+				url  	    : "/portal/gongsi/getGongsiFileId.do",
+				data 	    : JSON.stringify(gongsiVal),
+				type 	    : "POST",
+				dataType    : "json",
+				contentType : "application/json; charset=UTF-8",
+				success     : function(data){
+					ajaxLib.attchFileDownload(data.model.atchFileId);
+				},
+				error       : function(request, status, error){
+					alert("error : " + request.status);
+				}	
+			});
+			
+		};
+		
+		ajaxLib.attchFileDownload = function(atchFileId) {
+		    $w.download("/input/cmm/FileDown2.do?atchFileId="+atchFileId+"&atchFileSn="+0);
+		};
+		
+		]]></script>
+    </head>
+    <body class="">
+    <xf:group id="grp_main"  class="wrap" >
+    		<xf:group id="grp_head" style="position: relative;">
+    			<w2:wframe id="wf_head" style="position: relative;" src="/ui/portal/common/header.xml"></w2:wframe>
+    		</xf:group>
+    		<xf:group id=""  class="container">
+    			<xf:group class="content_x" id="" >
+    				<xf:group id="grp_subtop">
+    					
+    					
+    					
+    					
+    					<xf:group class="h1set" id="" style="" tagname="div">
+    						<xf:group class="loca" id="" style="" tagname="div" adaptiveThreshold="">
+		    					<xf:group class="loca_home1" id="" style="" tagname="div">
+		    						<w2:anchor id="" outerDiv="false" class="loca_home_txt" href="/portal/main.do"><xf:label>home</xf:label></w2:anchor>
+		    					</xf:group>
+		    					<xf:group class="loca_home2" id="" style="" tagname="div">
+			    					<w2:span id="" label=" &gt; " style=""/>
+			    					<w2:anchor id="sub_nav1" outerDiv="false"><xf:label>지방재정통계</xf:label></w2:anchor>
+			    					<w2:span id="" label=" &gt; " style=""/>
+			    					<w2:anchor id="sub_nav2" outerDiv="false"><xf:label>지방자치단체</xf:label></w2:anchor>
+			    				</xf:group>
+	    					</xf:group>
+	    					<xf:group id="" class="h1_tit">
+	    						<w2:textbox id="title" label="통합공시개요" tagname="h1"></w2:textbox>
+	    					</xf:group>
+    					</xf:group>
+    					
+    					
+    					
+    					<xf:group id="grp_content">
+    						<xf:group class="sub_search_bar" id="" tagname="div">
+    							<xf:group id="" style="" tagname="ul">
+    								<xf:group id="" tagname="li">
+    									<xf:select1 allOption="" appearance="minimal" chooseOption="" class="" direction="auto"
+    										disabled="false" disabledClass="w2selectbox_disabled" displayMode="label" id="sel_baseyear" optionOrder="false"
+    										renderType="select" submenuSize="auto" ev:onviewchange="pFn.sel_baseyear_onviewchange" title="기준연도 선택">
+    										<xf:choices>
+    											<xf:itemset nodeset="data:dc_Year_list">
+    												<xf:label ref="year_label"></xf:label>
+    												<xf:value ref="year_code"></xf:value>
+    											</xf:itemset>
+    										</xf:choices>
+    									</xf:select1>
+    									<xf:select1 allOption="" appearance="minimal" chooseOption="" direction="auto" disabled="false"
+    										disabledClass="w2selectbox_disabled" displayMode="label" id="sb_cate" optionOrder="false" ref="" renderType="select"
+    										style="height:23px;" submenuSize="auto" title="예산,결산기준 구분" visibleRowNum="5" ev:onviewchange="pFn.sb_cate_onviewchange">
+    										<xf:choices>
+    											<xf:itemset nodeset="data:dc_cate_list">
+    												<xf:label ref="code_nm"></xf:label>
+    												<xf:value ref="code"></xf:value>
+    											</xf:itemset>
+    										</xf:choices>
+    									</xf:select1>
+    								</xf:group>
+    								<xf:group id="" style="vertical-align:middle;" tagname="li">
+    									<xf:trigger type="button" id="btn_search" style="position: relative;" class="but_blue30"
+    										ev:onclick="pFn.btn_search_onclick" title="조회">
+    										<xf:label><![CDATA[조 회]]></xf:label>
+    									</xf:trigger>
+    								</xf:group>
+    							</xf:group>
+
+    						</xf:group>
+    						<xf:group id="" style="position: relative;">
+    							<w2:textbox id="" label="지방자치단체 재정공시란?" style="position: relative;" tagname="h2"></w2:textbox>
+    							<xf:group class="h2_text_box" id="" tagname="ul">
+    								<xf:group class="dot_text" id="" tagname="li">
+    									<w2:span id=""
+    										label="재정공시란 주민의 알권리를 보장하고 재정의 투명성을 높여 건전한 재정운용이 이루어질 수 있도록 지자체별로 &amp;nbsp;재정운용에 관한 중요사항을 주민에게 공개하는 행위입니다.">
+    									</w2:span>
+    								</xf:group>
+    								<xf:group class="dot_text" id="" tagname="li">
+    									<w2:span id=""
+    										label="지방재정법 제60조에 근거하여, 2006년부터 매년 8월, 2015년부터 매년 2월과 8월에 예산서와 결산서를 기준으로 &amp;nbsp;각 지자체별 홈페이지를 통해 공시하고 있습니다.">
+    									</w2:span>
+    								</xf:group>
+    							</xf:group>
+    						</xf:group>
+    						<xf:group id="">
+    							<w2:textbox id="" label="지방재정 통합공시란? " style="position: relative;" tagname="h2"></w2:textbox>
+    							<xf:group class="h2_text_box" id="" tagname="ul">
+    								<xf:group class="dot_text" id="" tagname="li">
+    									<w2:span id=""
+    										label="각 지방자치단체별 재정공시 내용 중 중요한 항목을 '동종 자치단체' 및 인구와 재정여건이 비슷한 '유사 자치단체' 와 비교하여 볼 수 있도록 행정안전부에서 통합하여 공개하는 것을 말합니다. &amp;nbsp;">
+    									</w2:span>
+    								</xf:group>
+    								<xf:group class="dot_text" id="" tagname="li">
+    									<w2:span id=""
+    										label="지방재정법 제60조의 2에 근거하여, 2010년부터 매년 10월, 2015년부터 매년 4월과 10월에 행정안전부 지방재정통합공개시스템 「지방재정365」 을 통해 통합공시하고 있습니다. &amp;nbsp;&lt;br/&gt;">
+    									</w2:span>
+    								</xf:group>
+    							</xf:group>
+    						</xf:group>
+    						
+    						<!-- 
+    						<xf:group id="" style="">
+    							<xf:group class="" id="" tagname="">
+    								<xf:group tagname="table" id="" style="position: relative ;width:100%;" class="w2tb">
+    									<w2:attributes>
+    										<w2:summary>참고</w2:summary>
+    									</w2:attributes>
+    									<xf:group tagname="caption">참고</xf:group>
+    									<xf:group tagname="colgroup">
+    										<xf:group style="width:25.00%;" tagname="col"></xf:group>
+    										<xf:group style="width:25.00%" tagname="col"></xf:group>
+    										<xf:group style="width:25.00%" tagname="col"></xf:group>
+    										<xf:group style="width:25.00%" tagname="col"></xf:group>
+    									</xf:group>
+    									<xf:group tagname="tr" style="">
+    										<xf:group style="" class="w2tb_th" tagname="th">
+    											참&amp;nbsp;고
+    											<w2:attributes>
+    												<w2:colspan>4</w2:colspan>
+    												<w2:rowspan>1</w2:rowspan>
+    											</w2:attributes>
+    										</xf:group>
+    									</xf:group>
+    									<xf:group tagname="tr" style="">
+    										<xf:group style="" class="w2tb_td" tagname="td">동종&amp;nbsp;자치단체</xf:group>
+    										<xf:group style="" class="w2tb_td" tagname="td">
+    											시도(1),&amp;nbsp;시(1),&amp;nbsp;군(1),&amp;nbsp;자치구(1)의&amp;nbsp;4종
+    											<w2:attributes>
+    												<w2:colspan>3</w2:colspan>
+    												<w2:rowspan>1</w2:rowspan>
+    											</w2:attributes>
+    										</xf:group>
+    									</xf:group>
+    									<xf:group tagname="tr" style="">
+    										<xf:group style="" class="w2tb_td" tagname="td">유사&amp;nbsp;자치단체</xf:group>
+    										<xf:group style="" class="w2tb_td" tagname="td">
+    											특별/광역시(1),&amp;nbsp;도(1),&amp;nbsp;시(4),&amp;nbsp;군(4),&amp;nbsp;자치구(4)의&amp;nbsp;14개&amp;nbsp;유형
+    											<w2:attributes>
+    												<w2:colspan>3</w2:colspan>
+    												<w2:rowspan>1</w2:rowspan>
+    											</w2:attributes>
+    										</xf:group>
+    									</xf:group>
+    									<xf:group tagname="tr" style="">
+    										<xf:group class="w2tb_td" tagname="td">
+    											※&amp;nbsp;유형화&amp;nbsp;기준&amp;nbsp;:&amp;nbsp;인구수(30%),&amp;nbsp;재정력지수(30%),&amp;nbsp;재정규모(30%),&amp;nbsp;인구증감률(10%)
+    											<w2:attributes>
+    												<w2:colspan>4</w2:colspan>
+    												<w2:rowspan>1</w2:rowspan>
+    											</w2:attributes>
+    										</xf:group>
+    									</xf:group>
+    									<xf:group tagname="tr" style="">
+    										<xf:group class="w2tb_td" tagname="td">2015년&amp;nbsp;통합공시&amp;nbsp;일정</xf:group>
+    										<xf:group class="w2tb_td" tagname="td">
+    											2015회계연도&amp;nbsp;예산(4월),&amp;nbsp;2014회계연도(10월)
+    											<w2:attributes>
+    												<w2:colspan>3</w2:colspan>
+    												<w2:rowspan>1</w2:rowspan>
+    											</w2:attributes>
+    										</xf:group>
+    									</xf:group>
+    								</xf:group>
+    								
+    							</xf:group>
+    						</xf:group>
+    						
+    						 -->
+    						
+    						<xf:group class="y_tab" id="" tagname="div">
+    							참고
+    						</xf:group>
+    						<xf:group class="y_tab_list" id="" tagname="ul">
+    							<xf:group class="" id="" tagname="li">
+    								동종 자치단체 : 시도(1), 시(1), 군(1), 자치구(1)의 4종
+    							</xf:group>
+    							<xf:group class="" id="" tagname="li">
+    								유사 자치단체 : 특별/광역시(1), 도(1), 시(4), 군(4), 자치구(4)의 14개 유형&lt;br&gt;
+    								※ 유형화 기준 : 인구규모(30%), 최근5년 인구증감률(10%), 재정력지수(시·군), 재정자립도(자치구)(30%), 일반회계예산규모(30%)
+    							</xf:group>
+    							<xf:group class="" id="gongsiCal" tagname="li">
+    							</xf:group>
+    						</xf:group>
+    						
+    						
+    						
+    						
+    						<xf:group class="pb16" id="" tagname="div" style=""></xf:group><xf:group class="sub_tab_bar" id="" tagname="div" style="">
+    							<xf:group id="" tagname="ul">
+    								<xf:group id="" tagname="li"></xf:group>
+    								<xf:group id="" tagname="li">
+    									<xf:trigger class="tab_white" ev:onclick="pFn.btn_itemdoc_onclick" id="btn_itemdoc" type="button" title="항목설명">
+    										<xf:label><![CDATA[항목설명]]></xf:label>
+    									</xf:trigger>
+    								</xf:group>
+    								<xf:group id="" tagname="li">
+    									<xf:trigger class="tab_white" ev:onclick="pFn.btn_sameavg_onclick" id="btn_sameavg" type="button" title="동종단체 평균">
+    										<xf:label><![CDATA[동종단체 평균]]></xf:label>
+    									</xf:trigger>
+    								</xf:group>
+    								<xf:group id="" tagname="li"></xf:group>
+    								<xf:group id="" tagname="li"></xf:group>
+    								<xf:group class="clear" id="" tagname="li"></xf:group>
+    							</xf:group>
+
+    						</xf:group>
+    						<xf:group class="" id="grp_itemdoc">
+    							<w2:textbox class="blind" id="" label="항목설명 탭컨텐츠" tagname="h2" displayFormat=""></w2:textbox>
+    							<w2:textbox class="" id="" label="통합공시 항목 설명" style="position: relative;" tagname="h2" displayFormat=""></w2:textbox>
+    							<xf:trigger class="tb_bt" disabled="" ev:onclick="pFn.sp_down_img_onclick" id="sp_down_img" type="button" style="" title="통합공시 상세내역 파일로 다운로드">
+								    <xf:label><![CDATA[통합공시 상세내역 파일로 다운로드]]></xf:label>
+								</xf:trigger>
+    							<xf:group class="table_wrap" id="" style="word-wrap:break-word;word-break:break-all;">
+    								<w2:gridView autoFit="allColumn" class="h52 grid_x" columnMove="" dataList="ln_dc_jipyu_list"
+    									fixedColumnWithHidden="" id="grd_stat" ignoreCellClick="false" scrollByColumn="false" showSortableImage="" sortOrderReverse=""
+    									sortable="" style="position: relative;height : 80px;word-wrap:break-word;word-break:break-all;z-index:5;" useShiftKey="true" visibleRowNum="all" dataDragDrop="" fixedColumn=""
+    									focusFlow="" resize="true" readOnly="true" tooltipDisplay="true" dragDisplayColumn="" oddEvenColorDisplay="false" focusMove="false">
+    									<w2:caption value="통합공시 항목설명 목록으로 분류, 지표, 지표설명으로 구성"></w2:caption>
+    									<w2:header id="header61" style="word-wrap:break-word;word-break:break-all;">
+    										<w2:row id="row62">
+    											<w2:column blockSelect="false" id="column73" inputType="text" width="150"
+    												displayMode="label" value="분류" class="h28" style="height : 42px;">
+    											</w2:column>
+    											<w2:column blockSelect="false" id="column69" inputType="text" width="300"
+    												displayMode="label" value="지표" class="h28" style="height : 42px;">
+    											</w2:column>
+    											<w2:column blockSelect="false" id="column67" inputType="text" width="500" displayMode="label"
+    												value="지표설명" class="h28" style="height : 42px;">
+    											</w2:column>
+    										</w2:row>
+    									</w2:header>
+    									<w2:gBody id="gBody64" style="word-wrap:break-word;word-break:break-all;">
+    										<w2:row id="row65" style="word-wrap:break-word;word-break:break-all;">
+    											<w2:column blockSelect="false" id="cate_nm" inputType="text" width="109" displayMode="label"
+    												colMerge="true" class="h21_L" style="height : 21px;" readOnly="true">
+    											</w2:column>
+    											<w2:column blockSelect="false" id="ix_code_nm" inputType="link" width="202"
+    												displayMode="label" dataType="" depthType="" displayType="" editModeEvent="" editType="select" importExp="" localeRef=""
+    												class="h21_L" style="height : 32px;" viewType="">
+    											</w2:column>
+    											<w2:column blockSelect="false" id="ix_desc" inputType="text" width="571" displayMode="label"
+    												class="h21_L" style="height : 21px;word-wrap:break-word;word-break:break-all;" displayType="all" hidden="false">
+    											</w2:column>
+    										</w2:row>
+    									</w2:gBody>
+    									<script ev:event="oncellclick(row,col)" type="javascript"><![CDATA[
+				    						fn_onCellClick(row, col);
+								    		 ]]></script>
+    									<script ev:event="oneditkeydown(info )" type="javascript"><![CDATA[
+				    						fn_onEditKeyDown(info );
+								    		 ]]></script>
+
+    								</w2:gridView>
+    							</xf:group>
+    							<xf:group class="pb16" id="" tagname="div"></xf:group>
+
+
+    						</xf:group>
+    						<xf:group class="" id="grp_sameavg" style="position: relative;display:none;">
+    							<w2:textbox class="blind" id="" label="동종단체  평균 탭 컨텐츠" tagname="h2"></w2:textbox>
+    							<w2:textbox class="" id="" label="동종단체 평균" style="position: relative;" tagname="h2"></w2:textbox>
+    							<xf:group class="h2_form_box_xml" id="" tagname="div" style="">
+    								<xf:group id="" tagname="ul">
+    									<xf:group id="" tagname="li">
+    										<w2:textbox id="txt_same" label="(단위 : 억원)"
+    											style="float : right;vertical-align:middle;margin-right:5px;width:80px;">
+    										</w2:textbox>
+    									</xf:group>
+    								</xf:group>
+    							</xf:group>
+    							<xf:group class="clear" id="" style="" tagname="div"></xf:group>
+    							<xf:group class="table_wrap" id="">
+    								<w2:gridView autoFit="allColumn" class="h52 grid_x" dataList="dc_summary_list" scrollByColumn="false" id=""
+    									style="position: relative;height: 150px;" ignoreCellClick="false" ignoreToggleOnDisabled="false" fixedColumnWithHidden="true"
+    									useShiftKey="true"  visibleRowNum="all" resize="true" readOnly="true" tooltipDisplay="true" oddEvenColorDisplay="false">
+    									<w2:caption id="caption2" style="" value="동종단체 평균 표로 항목, 지표값(전국, 시도, 시, 군, 구), 산정기준 으로 구성"></w2:caption>
+    									<w2:header id="header1">
+    										<w2:row id="row39">
+    											<w2:column blockSelect="false" id="column45" width="137" inputType="text"
+    												displayMode="label" colSpan="" rowSpan="2" value="항목" class="h28" style="height : 42px;">
+    											</w2:column>
+    											<w2:column blockSelect="false" id="column44" width="350" inputType="text"
+    												displayMode="label" colSpan="5" rowSpan="" value="지표값" class="h28" style="height : 42px;">
+    											</w2:column>
+    											<w2:column blockSelect="false" id="column45" width="50" inputType="text"
+    												displayMode="label" colSpan="" rowSpan="2" value="산정기준" class="h28" style="height : 42px;">
+    											</w2:column>
+    										</w2:row>
+    										<w2:row id="row2">
+    											<w2:column blockSelect="false" id="column19" inputType="text" width="70" displayMode="label"
+    												value="전국" class="h28" style="height : 42px;">
+    											</w2:column>
+    											<w2:column blockSelect="false" id="column17" inputType="text" width="70" displayMode="label"
+    												value="시도" class="h28" style="height : 42px;">
+    											</w2:column>
+    											<w2:column blockSelect="false" id="column15" inputType="text" width="70" displayMode="label"
+    												value="시" class="h28" style="height : 42px;">
+    											</w2:column>
+    											<w2:column blockSelect="false" id="column13" inputType="text" width="70" displayMode="label"
+    												value="군" class="h28" style="height : 42px;">
+    											</w2:column>
+    											<w2:column blockSelect="false" id="column11" inputType="text" width="70" displayMode="label"
+    												value="구" class="h28" style="height : 42px;">
+    											</w2:column>
+    										</w2:row>
+    									</w2:header>
+    									<w2:gBody id="gBody4">
+    										<w2:row id="row5">
+    											<w2:column blockSelect="false" id="ix_code_nm" inputType="text" width="137"
+    												displayMode="label" class="h21_L" style="height : 24px;">
+    											</w2:column>
+    											<w2:column blockSelect="false" id="rate1_str" inputType="text" width="70"
+    												displayMode="label" class="h21_R" style="height : 21px;">
+    											</w2:column>
+    											<w2:column blockSelect="false" id="rate2_str" inputType="text" width="70"
+    												displayMode="label" class="h21_R" style="height : 21px;">
+    											</w2:column>
+    											<w2:column blockSelect="false" id="rate3_str" inputType="text" width="70"
+    												displayMode="label" class="h21_R" style="height : 21px;">
+    											</w2:column>
+    											<w2:column blockSelect="false" id="rate4_str" inputType="text" width="70"
+    												displayMode="label" class="h21_R" style="height : 21px;">
+    											</w2:column>
+    											<w2:column blockSelect="false" id="rate5_str" inputType="text" width="70"
+    												displayMode="label" class="h21_R" style="height : 21px;">
+    											</w2:column>
+    											<w2:column blockSelect="false" id="out_sfrnd_nm" inputType="text" width="70"
+    												displayMode="label" class="h21" style="height : 21px;">
+    											</w2:column>
+    										</w2:row>
+    									</w2:gBody>
+    								</w2:gridView>
+    							</xf:group>
+    						<xf:group class="h2_text_box" id="txt_same_avg_desc" tagname="ul">
+    							<xf:group class="dot_text" id="" tagname="li">
+    								<w2:span id="" label="통합회계 : 일반회계 + 공기업특별회계 + 기타특별회계 + 기금&lt;br/&gt;">
+    								</w2:span>
+    							</xf:group>
+    							<xf:group class="dot_text" id="dot_text_custom" tagname="li">
+    								<w2:span id="" label="">
+    								</w2:span>
+    							</xf:group>
+    						</xf:group>
+    						<xf:group class="pb16" id="" tagname="div"></xf:group>
+    						</xf:group>
+    					</xf:group>
+    				</xf:group>
+    			</xf:group>
+    		</xf:group>
+    		<xf:group id="grp_foot" style="position: relative;" class="">
+    			<w2:wframe id="wf_foot" style="position: relative;" src="/ui/portal/common/footer.xml"></w2:wframe>
+    		</xf:group>
+    	</xf:group></body>
+</html>
